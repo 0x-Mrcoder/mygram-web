@@ -1,0 +1,241 @@
+[2025-12-18 04:50:21] local.INFO: Payrant Webhook Raw: {"content":"{
+  \"status\": \"success\",
+  \"transaction\": {
+    \"reference\": \"TEST_REF_AGAIN_456\",
+    \"amount\": 300,
+    \"net_amount\": 297,
+    \"fee\": 3,
+    \"currency\": \"NGN\",
+    \"timestamp\": \"2025-07-13 12:30:19\",
+    \"user_id\": 52,
+    \"account_details\": {
+      \"account_number\": \"6620059043\",
+      \"account_name\": \"Usman Umar(Payrant)\"
+    },
+    \"payer_details\": {
+      \"account_number\": \"3145980158\",
+      \"account_name\": \"TEST SENDER\",
+      \"bank_name\": \"TEST BANK\"
+    }
+  }
+}","headers":{"host":["127.0.0.1:8000"],"user-agent":["curl/8.5.0"],"accept":["*/*"],"content-type":["application/json"],"content-length":["475"]}} 
+[2025-12-18 04:50:21] local.INFO: Payrant Webhook: Processing Payment for Account: 6620059043, Amount: 300  
+[2025-12-18 04:50:21] local.ERROR: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'note' in 'field list' (SQL: insert into `deposits` (`user_id`, `amount`, `trx`, `method_name`, `date`, `status`, `note`, `updated_at`, `created_at`) values (815, 300, TEST_REF_AGAIN_456, Payrant (Virtual Auto), 18-12-2025 04:50:21, approved, Paid by TEST SENDER (TEST BANK) - Auto Detected, 2025-12-18 04:50:21, 2025-12-18 04:50:21)) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'note' in 'field list' (SQL: insert into `deposits` (`user_id`, `amount`, `trx`, `method_name`, `date`, `status`, `note`, `updated_at`, `created_at`) values (815, 300, TEST_REF_AGAIN_456, Payrant (Virtual Auto), 18-12-2025 04:50:21, approved, Paid by TEST SENDER (TEST BANK) - Auto Detected, 2025-12-18 04:50:21, 2025-12-18 04:50:21)) at /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Connection.php:760)
+[stacktrace]
+#0 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Connection.php(720): Illuminate\\Database\\Connection->runQueryCallback()
+#1 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Connection.php(534): Illuminate\\Database\\Connection->run()
+#2 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Connection.php(498): Illuminate\\Database\\Connection->statement()
+#3 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Query/Processors/Processor.php(32): Illuminate\\Database\\Connection->insert()
+#4 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3322): Illuminate\\Database\\Query\\Processors\\Processor->processInsertGetId()
+#5 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(1869): Illuminate\\Database\\Query\\Builder->insertGetId()
+#6 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1330): Illuminate\\Database\\Eloquent\\Builder->__call()
+#7 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1295): Illuminate\\Database\\Eloquent\\Model->insertAndSetId()
+#8 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1138): Illuminate\\Database\\Eloquent\\Model->performInsert()
+#9 /home/mrcoder/Documents/app/app/Http/Controllers/user/UserController.php(863): Illuminate\\Database\\Eloquent\\Model->save()
+#10 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Routing/Controller.php(54): App\\Http\\Controllers\\user\\UserController->payrantWebhook()
+#11 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php(43): Illuminate\\Routing\\Controller->callAction()
+#12 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php(259): Illuminate\\Routing\\ControllerDispatcher->dispatch()
+#13 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php(205): Illuminate\\Routing\\Route->runController()
+#14 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php(798): Illuminate\\Routing\\Route->run()
+#15 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(141): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}()
+#16 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#17 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()
+#18 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#19 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle()
+#20 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/View/Middleware/ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#21 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle()
+#22 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#23 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest()
+#24 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Session\\Middleware\\StartSession->handle()
+#25 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#26 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle()
+#27 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#28 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle()
+#29 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(116): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#30 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php(797): Illuminate\\Pipeline\\Pipeline->then()
+#31 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php(776): Illuminate\\Routing\\Router->runRouteWithinStack()
+#32 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php(740): Illuminate\\Routing\\Router->runRoute()
+#33 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php(729): Illuminate\\Routing\\Router->dispatchToRoute()
+#34 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(190): Illuminate\\Routing\\Router->dispatch()
+#35 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(141): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}()
+#36 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#37 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle()
+#38 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle()
+#39 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#40 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle()
+#41 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle()
+#42 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#43 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle()
+#44 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(86): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#45 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle()
+#46 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#47 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Http\\Middleware\\HandleCors->handle()
+#48 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#49 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Http\\Middleware\\TrustProxies->handle()
+#50 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(116): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#51 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(165): Illuminate\\Pipeline\\Pipeline->then()
+#52 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(134): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter()
+#53 /home/mrcoder/Documents/app/public/index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle()
+#54 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php(16): require_once('...')
+#55 {main}
+
+[previous exception] [object] (PDOException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'note' in 'field list' at /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Connection.php:539)
+[stacktrace]
+#0 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Connection.php(539): PDO->prepare()
+#1 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Connection.php(753): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}()
+#2 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Connection.php(720): Illuminate\\Database\\Connection->runQueryCallback()
+#3 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Connection.php(534): Illuminate\\Database\\Connection->run()
+#4 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Connection.php(498): Illuminate\\Database\\Connection->statement()
+#5 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Query/Processors/Processor.php(32): Illuminate\\Database\\Connection->insert()
+#6 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3322): Illuminate\\Database\\Query\\Processors\\Processor->processInsertGetId()
+#7 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(1869): Illuminate\\Database\\Query\\Builder->insertGetId()
+#8 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1330): Illuminate\\Database\\Eloquent\\Builder->__call()
+#9 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1295): Illuminate\\Database\\Eloquent\\Model->insertAndSetId()
+#10 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1138): Illuminate\\Database\\Eloquent\\Model->performInsert()
+#11 /home/mrcoder/Documents/app/app/Http/Controllers/user/UserController.php(863): Illuminate\\Database\\Eloquent\\Model->save()
+#12 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Routing/Controller.php(54): App\\Http\\Controllers\\user\\UserController->payrantWebhook()
+#13 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php(43): Illuminate\\Routing\\Controller->callAction()
+#14 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php(259): Illuminate\\Routing\\ControllerDispatcher->dispatch()
+#15 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Routing/Route.php(205): Illuminate\\Routing\\Route->runController()
+#16 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php(798): Illuminate\\Routing\\Route->run()
+#17 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(141): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}()
+#18 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#19 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()
+#20 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#21 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle()
+#22 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/View/Middleware/ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#23 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle()
+#24 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#25 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest()
+#26 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Session\\Middleware\\StartSession->handle()
+#27 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#28 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle()
+#29 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#30 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle()
+#31 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(116): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#32 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php(797): Illuminate\\Pipeline\\Pipeline->then()
+#33 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php(776): Illuminate\\Routing\\Router->runRouteWithinStack()
+#34 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php(740): Illuminate\\Routing\\Router->runRoute()
+#35 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Routing/Router.php(729): Illuminate\\Routing\\Router->dispatchToRoute()
+#36 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(190): Illuminate\\Routing\\Router->dispatch()
+#37 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(141): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}()
+#38 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#39 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle()
+#40 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle()
+#41 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#42 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle()
+#43 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle()
+#44 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#45 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle()
+#46 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(86): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#47 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle()
+#48 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#49 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Http\\Middleware\\HandleCors->handle()
+#50 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#51 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\\Http\\Middleware\\TrustProxies->handle()
+#52 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(116): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#53 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(165): Illuminate\\Pipeline\\Pipeline->then()
+#54 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(134): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter()
+#55 /home/mrcoder/Documents/app/public/index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle()
+#56 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php(16): require_once('...')
+#57 {main}
+"} 
+[2025-12-18 04:51:12] local.ERROR: SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'spins' already exists (SQL: create table `spins` (`id` bigint unsigned not null auto_increment primary key, `referrer_id` int not null, `package_amount` varchar(255) not null, `reward_amount` varchar(255) not null, `status` enum('pending', 'claimed') not null default 'pending', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci') {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S01): SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'spins' already exists (SQL: create table `spins` (`id` bigint unsigned not null auto_increment primary key, `referrer_id` int not null, `package_amount` varchar(255) not null, `reward_amount` varchar(255) not null, `status` enum('pending', 'claimed') not null default 'pending', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci') at /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Connection.php:760)
+[stacktrace]
+#0 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Connection.php(720): Illuminate\\Database\\Connection->runQueryCallback()
+#1 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Connection.php(534): Illuminate\\Database\\Connection->run()
+#2 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php(109): Illuminate\\Database\\Connection->statement()
+#3 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(439): Illuminate\\Database\\Schema\\Blueprint->build()
+#4 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(281): Illuminate\\Database\\Schema\\Builder->build()
+#5 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(338): Illuminate\\Database\\Schema\\Builder->create()
+#6 /home/mrcoder/Documents/app/database/migrations/2025_09_13_000003_create_spins_table.php(16): Illuminate\\Support\\Facades\\Facade::__callStatic()
+#7 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(496): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#8 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(414): Illuminate\\Database\\Migrations\\Migrator->runMethod()
+#9 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(423): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#10 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(224): Illuminate\\Database\\Migrations\\Migrator->runMigration()
+#11 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#12 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(778): Illuminate\\Console\\View\\Components\\Task->render()
+#13 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(224): Illuminate\\Database\\Migrations\\Migrator->write()
+#14 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(189): Illuminate\\Database\\Migrations\\Migrator->runUp()
+#15 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(132): Illuminate\\Database\\Migrations\\Migrator->runPending()
+#16 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(88): Illuminate\\Database\\Migrations\\Migrator->run()
+#17 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(636): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#18 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(81): Illuminate\\Database\\Migrations\\Migrator->usingConnection()
+#19 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#20 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#21 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#22 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#23 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Container/Container.php(661): Illuminate\\Container\\BoundMethod::call()
+#24 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Console/Command.php(183): Illuminate\\Container\\Container->call()
+#25 /home/mrcoder/Documents/app/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute()
+#26 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Console/Command.php(152): Symfony\\Component\\Console\\Command\\Command->run()
+#27 /home/mrcoder/Documents/app/vendor/symfony/console/Application.php(1070): Illuminate\\Console\\Command->run()
+#28 /home/mrcoder/Documents/app/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand()
+#29 /home/mrcoder/Documents/app/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun()
+#30 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Console/Application.php(102): Symfony\\Component\\Console\\Application->run()
+#31 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(155): Illuminate\\Console\\Application->run()
+#32 /home/mrcoder/Documents/app/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#33 {main}
+
+[previous exception] [object] (PDOException(code: 42S01): SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'spins' already exists at /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Connection.php:545)
+[stacktrace]
+#0 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Connection.php(545): PDOStatement->execute()
+#1 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Connection.php(753): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}()
+#2 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Connection.php(720): Illuminate\\Database\\Connection->runQueryCallback()
+#3 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Connection.php(534): Illuminate\\Database\\Connection->run()
+#4 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php(109): Illuminate\\Database\\Connection->statement()
+#5 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(439): Illuminate\\Database\\Schema\\Blueprint->build()
+#6 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php(281): Illuminate\\Database\\Schema\\Builder->build()
+#7 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(338): Illuminate\\Database\\Schema\\Builder->create()
+#8 /home/mrcoder/Documents/app/database/migrations/2025_09_13_000003_create_spins_table.php(16): Illuminate\\Support\\Facades\\Facade::__callStatic()
+#9 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(496): Illuminate\\Database\\Migrations\\Migration@anonymous->up()
+#10 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(414): Illuminate\\Database\\Migrations\\Migrator->runMethod()
+#11 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(423): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#12 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(224): Illuminate\\Database\\Migrations\\Migrator->runMigration()
+#13 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php(37): Illuminate\\Database\\Migrations\\Migrator->Illuminate\\Database\\Migrations\\{closure}()
+#14 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(778): Illuminate\\Console\\View\\Components\\Task->render()
+#15 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(224): Illuminate\\Database\\Migrations\\Migrator->write()
+#16 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(189): Illuminate\\Database\\Migrations\\Migrator->runUp()
+#17 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(132): Illuminate\\Database\\Migrations\\Migrator->runPending()
+#18 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(88): Illuminate\\Database\\Migrations\\Migrator->run()
+#19 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(636): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->Illuminate\\Database\\Console\\Migrations\\{closure}()
+#20 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(81): Illuminate\\Database\\Migrations\\Migrator->usingConnection()
+#21 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Database\\Console\\Migrations\\MigrateCommand->handle()
+#22 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#23 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#24 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#25 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Container/Container.php(661): Illuminate\\Container\\BoundMethod::call()
+#26 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Console/Command.php(183): Illuminate\\Container\\Container->call()
+#27 /home/mrcoder/Documents/app/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute()
+#28 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Console/Command.php(152): Symfony\\Component\\Console\\Command\\Command->run()
+#29 /home/mrcoder/Documents/app/vendor/symfony/console/Application.php(1070): Illuminate\\Console\\Command->run()
+#30 /home/mrcoder/Documents/app/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand()
+#31 /home/mrcoder/Documents/app/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun()
+#32 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Console/Application.php(102): Symfony\\Component\\Console\\Application->run()
+#33 /home/mrcoder/Documents/app/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(155): Illuminate\\Console\\Application->run()
+#34 /home/mrcoder/Documents/app/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
+#35 {main}
+"} 
+[2025-12-18 04:51:34] local.INFO: Payrant Webhook Raw: {"content":"{
+  \"status\": \"success\",
+  \"transaction\": {
+    \"reference\": \"TEST_REF_FORCE_999\",
+    \"amount\": 300,
+    \"net_amount\": 297,
+    \"fee\": 3,
+    \"currency\": \"NGN\",
+    \"timestamp\": \"2025-07-13 12:30:19\",
+    \"user_id\": 52,
+    \"account_details\": {
+      \"account_number\": \"6620059043\",
+      \"account_name\": \"Usman Umar(Payrant)\"
+    },
+    \"payer_details\": {
+      \"account_number\": \"3145980158\",
+      \"account_name\": \"FORCE CHECK SENDER\",
+      \"bank_name\": \"FORCE BANK\"
+    }
+  }
+}","headers":{"host":["127.0.0.1:8000"],"user-agent":["curl/8.5.0"],"accept":["*/*"],"content-type":["application/json"],"content-length":["483"]}} 
+[2025-12-18 04:51:34] local.INFO: Payrant Webhook: Processing Payment for Account: 6620059043, Amount: 300  
+[2025-12-18 04:51:34] local.INFO: Payrant Webhook: Auto-Deposit Created for User 815  

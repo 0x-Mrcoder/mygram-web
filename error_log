@@ -1,0 +1,2 @@
+[25-Sep-2025 07:00:48 Asia/Dhaka] PHP Fatal error:  Cannot redeclare App\Http\Controllers\user\UserController::recharge() in /home/profitz2/demo.profit-zone.top/app/Http/Controllers/user/UserController.php on line 267
+[25-Sep-2025 07:02:20 Asia/Dhaka] PHP Fatal error:  Cannot redeclare App\Http\Controllers\user\UserController::recharge() in /home/profitz2/demo.profit-zone.top/app/Http/Controllers/user/UserController.php on line 267
