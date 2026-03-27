@@ -220,7 +220,7 @@ class UserController extends Controller
         $deposit->user_id = $user->id;
         $deposit->amount = $request->amount;
         $deposit->trx = 'TRX-' . strtoupper(uniqid());
-        $deposit->method_name = 'Payrant';
+        $deposit->method_name = setting('payment_mode') == 'virtual_account' ? strtoupper(setting('virtual_gateway', 'VTStack')) : 'Manual';
         $deposit->date = date('d-m-Y H:i:s');
         $deposit->status = 'pending';
         $deposit->save();
@@ -276,8 +276,11 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Payrant Checkout Exception', ['error' => $e->getMessage()]);
-            return back()->with('error', 'Payment initialization failed. Please try again.');
+            return redirect()->route('user.recharge')->with('error', 'Payment initialization failed. Please try again.');
         }
+
+        // Final Fallback if no payment mode matched
+        return redirect()->route('user.recharge')->with('error', 'Invalid payment mode configuration. Please contact support.');
     }
 
     public function paymentCallback(Request $request)

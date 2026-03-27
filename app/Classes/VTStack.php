@@ -44,7 +44,7 @@ class VTStack
     protected function client()
     {
         return Http::withHeaders([
-            'x-api-key' => $this->apiKey,
+            'Authorization' => 'Bearer ' . $this->apiKey,
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ]);
