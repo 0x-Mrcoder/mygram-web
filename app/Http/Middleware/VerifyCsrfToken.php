@@ -19,5 +19,8 @@ class VerifyCsrfToken extends Middleware
         'user/generate-virtual-account',
         'user/update-name',
         'my/name/submit',
+        'login',
+        'register',
+        'my/login',
     ];
 }
