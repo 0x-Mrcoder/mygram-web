@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/payrant/webhook', [PayrantWebhookController::class, 'handle']);
 Route::post('/vtstack/webhook', [VTStackWebhookController::class, 'handle']);
+Route::post('/vtstack', [VTStackWebhookController::class, 'handle']); // Backwards compat for dashboard URL
 
 Route::get('number/{type}', [OnepayController::class, 'return_number']);
 Route::get('deposit/submit', [OnepayController::class, 'depositSubmit']);
