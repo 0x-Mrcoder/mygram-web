@@ -19,7 +19,10 @@ class VTStackWebhookController extends Controller
      */
     public function handle(Request $request)
     {
-        Log::info('VTStack Webhook: Received', ['payload' => $request->all()]);
+        Log::info('VTStack Webhook: Received', [
+            'payload' => $request->all(),
+            'headers' => $request->headers->all()
+        ]);
 
         $setting = Setting::first();
         $webhookSecret = $setting->vtstack_webhook_secret;
