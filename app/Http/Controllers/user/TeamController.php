@@ -63,9 +63,31 @@ class TeamController extends Controller
         $purchase2 = Purchase::whereIn('user_id', $second_ids->toArray())->groupBy('user_id')->count();
         $purchase3 = Purchase::whereIn('user_id', $third_ids->toArray())->groupBy('user_id')->count();
 
-        $totalCommission1 = UserLedger::where('user_id', Auth::id())->where('reason', 'commission')->where('step', 'first')->sum('amount');
-        $totalCommission2 = UserLedger::where('user_id', Auth::id())->where('reason', 'commission')->where('step', 'second')->sum('amount');
-        $totalCommission3 = UserLedger::where('user_id', Auth::id())->where('reason', 'commission')->where('step', 'third')->sum('amount');
+        // Get commissions from new multi-level system
+        $totalCommission1 = UserLedger::where('user_id', Auth::id())
+            ->where('reason', 'referral_commission_level1')
+            ->sum('amount');
+        $totalCommission2 = UserLedger::where('user_id', Auth::id())
+            ->where('reason', 'referral_commission_level2')
+            ->sum('amount');
+        $totalCommission3 = UserLedger::where('user_id', Auth::id())
+            ->where('reason', 'referral_commission_level3')
+            ->sum('amount');
+        
+        // Also include old commissions for backward compatibility
+        $totalCommission1 += UserLedger::where('user_id', Auth::id())
+            ->where('reason', 'commission')
+            ->where('step', 'first')
+            ->sum('amount');
+        $totalCommission2 += UserLedger::where('user_id', Auth::id())
+            ->where('reason', 'commission')
+            ->where('step', 'second')
+            ->sum('amount');
+        $totalCommission3 += UserLedger::where('user_id', Auth::id())
+            ->where('reason', 'commission')
+            ->where('step', 'third')
+            ->sum('amount');
+            
         $totalCommission = $totalCommission1 + $totalCommission2 + $totalCommission3;
 
         return view('app.main.team.index',

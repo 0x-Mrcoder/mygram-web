@@ -39,11 +39,8 @@ Route::get('clear', function () {
 */
 
 Route::middleware('throttle:limit-check')->group(function () {
-    Route::prefix('admin1')->group(function () {
-        Route::get('/', function () {
-            return redirect()->route('admin.login');
-        });
-        Route::get('login', [AdminController::class, 'login'])->name('admin.login');
+    Route::prefix('my')->group(function () {
+        Route::get('/', [AdminController::class, 'login'])->name('admin.login');
         Route::post('login', [AdminController::class, 'login_submit'])->name('admin.login-submit');
     });
 
@@ -68,6 +65,7 @@ Route::middleware('throttle:limit-check')->group(function () {
         //Manage Customers
         Route::get('customers', [ManageUserController::class, 'customers'])->name('admin.customer.index');
         Route::get('customers/status/{id}', [ManageUserController::class, 'customersStatus'])->name('admin.customer.status');
+        Route::get('customers/withdraw-status/{id}', [ManageUserController::class, 'withdrawStatus'])->name('admin.customer.withdraw_status');
         Route::get('customers/login/{id}', [ManageUserController::class, 'user_acc_login'])->name('admin.customer.login');
         Route::post('customers/change-password', [ManageUserController::class, 'user_acc_password'])->name('admin.customer.change-password');
         Route::get('search/user', [ManageUserController::class, 'search'])->name('admin.search.user');
@@ -94,6 +92,7 @@ Route::middleware('throttle:limit-check')->group(function () {
         Route::get('package/create/{id?}', [PackageController::class, 'create'])->name('admin.package.create');
         Route::post('package/insert-update', [PackageController::class, 'insert_or_update'])->name('admin.package.insert');
         Route::delete('package/delete/{id}', [PackageController::class, 'delete'])->name('admin.package.delete');
+        Route::post('package/event-status', [PackageController::class, 'eventStatus'])->name('admin.package.event_status');
 
 
         Route::get('task', [TaskController::class, 'index'])->name('admin.task.index');
@@ -198,7 +197,7 @@ Route::post('/home/confirm_payment/{id}', [UserController::class, 'confirmPaymen
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
         
-
+        
 
         Route::post('user/update/profile', [UserController::class, 'update_profile'])->name('user.update.profile');
         Route::get('my-profile', [UserController::class, 'profile'])->name('my.profile');
@@ -262,7 +261,8 @@ Route::post('/home/confirm_payment/{id}', [UserController::class, 'confirmPaymen
         Route::get('earning', [MiningController::class, 'earning'])->name('earning');
 
         Route::get('promo', [GetBonusController::class, 'index'])->name('promo');
-        Route::post('promo/submit', [GetBonusController::class, 'submitBonusCode'])->name('submitBonusCode');
+        Route::view('/user/redeem', 'app.main.redeem_gift')->name('user.redeem');
+Route::post('promo/submit', [GetBonusController::class, 'submitBonusCode'])->name('user.gift_usage');
 
         //Apk
         Route::get('download-apk', [UserController::class, 'download_apk'])->name('download.apk');
@@ -306,3 +306,50 @@ Route::post('/webhook/payrant', [UserController::class, 'payrantWebhook'])->name
 
 require __DIR__ . '/auth.php';
 
+Route::get('/debug-event', function() {
+    $s = \App\Models\Setting::first();
+    echo "<h1>Event Debugger V2</h1>";
+    echo "Server Time (now): " . now()->format('Y-m-d H:i:s') . "<br>";
+    echo "Server Timezone: " . config('app.timezone') . "<br>";
+    echo "PHP Timezone: " . date_default_timezone_get() . "<br>";
+    echo "<hr>";
+    
+    if(!$s) die("No Settings Found in DB");
+
+    echo "Event Active (DB): " . ($s->event_active ? '<b style="color:green">YES (1)</b>' : '<b style="color:red">NO (0)</b>') . "<br>";
+    echo "Event End Time (DB Raw): " . $s->event_end_time . "<br>";
+    
+    $parsed = \Carbon\Carbon::parse($s->event_end_time);
+    echo "Event End Time (Parsed): " . $parsed->format('Y-m-d H:i:s') . "<br>";
+    
+    $isFuture = $parsed->isFuture();
+    echo "Is Future? " . ($isFuture ? '<b style="color:green">YES</b>' : '<b style="color:red">NO (Expired)</b>') . "<br>";
+    
+    echo "<hr>";
+    if ($s->event_active && $isFuture) {
+        echo "<h1 style='color:green'>RESULT: EVENT IS ACTIVE</h1>";
+    } else {
+        echo "<h1 style='color:red'>RESULT: EVENT IS HIDDEN</h1>";
+        if (!$s->event_active) echo "Reason: Switch is OFF in database.<br>";
+        if (!$isFuture) echo "Reason: Date is in the past.<br>";
+    }
+});
+
+Route::get('/force-enable-event', function() {
+    $s = \App\Models\Setting::first();
+    if($s) {
+        $s->event_active = 1;
+        $s->event_end_time = now()->addDays(30);
+        $s->save();
+        return "SUCCESS! Event Forced Enabled. End Time set to: " . $s->event_end_time . ". <a href='/debug-event'>Check Debug</a>";
+    }
+    return "Failed to find settings.";
+});
+
+Route::get('/clear-cache-force', function() {
+    \Artisan::call('cache:clear');
+    \Artisan::call('config:clear');
+    \Artisan::call('view:clear');
+    \Artisan::call('route:clear');
+    return "Cache Cleared Forcefully!";
+});

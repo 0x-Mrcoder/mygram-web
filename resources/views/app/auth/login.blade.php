@@ -2,314 +2,377 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Login - MyGram</title>
+    <title>Login - FortuneFlow</title>
 
+    <!-- Font: San Francisco style (Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         :root {
-            --primary-color: #ee667f;
-            --primary-gradient: linear-gradient(135deg, #ff8fa3 0%, #ee667f 100%);
-            --secondary-color: #333;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --input-bg: #f0f2f5;
-            --text-color: #333;
-            --text-muted: #888;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            /* Royal Gold & Midnight Navy */
+            --ios-bg: #0A0E1A; 
+            --ios-card: #161B2D;
+            --ios-separator: #2D3748;
+            --ios-blue: #F1C40F; /* Gold */
+            --ios-text: #FFFFFF;
+            --ios-text-secondary: #A0AEC0;
+            --ios-danger: #E74C3C;
+            --ios-success: #27AE60;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Poppins', sans-serif; background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-        
-        .login-container {
-            width: 100%;
-            max-width: 400px;
-            padding: 30px;
-            background: var(--card-bg);
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--ios-bg);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            color: var(--ios-text);
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            width: 100%;
+            background: #fff;
+            padding-bottom: 20px;
+            display: flex;
             justify-content: center;
+            align-items: center;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.05); /* Subtle border */
+        }
+        .banner-img {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            object-fit: cover;
         }
 
-        @media (min-width: 480px) {
-            .login-container {
-                min-height: auto;
-                border-radius: 30px;
-                box-shadow: var(--shadow);
-                margin: 20px;
-            }
+        /* Content Wrapper */
+        .content-wrapper {
+            flex: 1;
+            padding: 32px 16px;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
         }
 
-        .header { text-align: center; margin-bottom: 10px; }
-        .logo { width: 250px; height: auto; margin-bottom: 1px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
-        .welcome-text { font-size: 24px; margin-top: -90px; font-weight: 700; color: var(--secondary-color); margin-bottom: 5px; }
-        .sub-text { font-size: 14px; color: var(--text-muted); }
+        .section-header {
+            margin-bottom: 15px;
+            padding-left: 16px; /* Align with list content */
+            text-transform: uppercase;
+            font-size: 13px;
+            color: var(--ios-text-secondary);
+            font-weight: 400;
+        }
 
-        .form-group { margin-bottom: 20px; }
-        .input-group {
-            position: relative;
-            background: var(--input-bg);
-            border-radius: 15px;
-            padding: 5px 15px;
+        /* iOS Grouped List Container */
+        .ios-list-group {
+            background: var(--ios-card);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .list-item {
             display: flex;
             align-items: center;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
+            padding-left: 16px;
+            background: var(--ios-card);
+            min-height: 50px; /* Standard iOS row height is ~44px-50px */
         }
-        .input-group:focus-within {
-            background: #fff;
-            border-color: var(--primary-color);
-            box-shadow: 0 4px 15px rgba(255, 145, 0, 0.1);
+
+        .list-item:not(:last-child) .item-inner {
+            border-bottom: 0.5px solid var(--ios-separator);
         }
-        .input-icon { color: var(--text-muted); font-size: 18px; margin-right: 10px; width: 20px; text-align: center; }
-        .input-group:focus-within .input-icon { color: var(--primary-color); }
-        
-        .form-control {
+
+        .item-inner {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding-right: 16px;
+            height: 50px;
+        }
+
+        .list-icon {
+            font-size: 20px;
+            color: var(--ios-blue);
+            width: 30px;
+            text-align: left;
+        }
+
+        .ios-input {
+            flex: 1;
             border: none;
-            background: transparent;
-            width: 100%;
-            padding: 12px 0;
-            font-size: 15px;
-            color: var(--text-color);
             outline: none;
+            font-size: 17px;
+            height: 100%;
             font-family: inherit;
+            color: var(--ios-text);
+            background: transparent !important;
         }
-        .form-control::placeholder { color: #aaa; }
+        .ios-input::placeholder { color: #8E8E93; }
 
-        .password-toggle { cursor: pointer; color: var(--text-muted); padding: 5px; }
-        
-        .options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; font-size: 13px; }
-        .remember-me { display: flex; align-items: center; color: var(--text-muted); cursor: pointer; }
-        .remember-me input { margin-right: 8px; accent-color: var(--primary-color); width: 16px; height: 16px; }
-        .forgot-pass { color: var(--primary-color); text-decoration: none; font-weight: 500; }
+        /* Fix for White/Yellow Autofill Background */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px var(--ios-card) inset !important;
+            -webkit-text-fill-color: var(--ios-text) !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
 
-        .btn-login {
-            width: 100%;
-            padding: 16px;
+        .item-btn {
+            background: none;
             border: none;
-            border-radius: 15px;
-            background: var(--primary-gradient);
+            color: var(--ios-blue);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Login Button */
+        .primary-btn {
+            width: 100%;
+            background: var(--ios-blue);
             color: white;
-            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            padding: 14px;
+            font-size: 17px;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(255, 145, 0, 0.3);
-            transition: transform 0.2s, box-shadow 0.2s;
-            position: relative;
-            overflow: hidden;
+            transition: opacity 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
         }
-        .btn-login:active { transform: scale(0.98); box-shadow: 0 5px 10px rgba(255, 145, 0, 0.2); }
-        .btn-login:disabled { opacity: 0.7; cursor: not-allowed; }
+        .primary-btn:active { opacity: 0.6; }
 
-        .footer-links { text-align: center; margin-top: 30px; font-size: 14px; color: var(--text-muted); }
-        .footer-links a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
+        /* Links */
+        .bottom-actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+        }
+        
+        .toggle-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        /* Native iOS Switch mimic */
+        .ios-switch {
+            position: relative;
+            display: inline-block;
+            width: 51px;
+            height: 31px;
+        }
+        .ios-switch input { opacity: 0; width: 0; height: 0; }
+        .switch-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #E9E9EA;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .switch-slider:before {
+            position: absolute;
+            content: "";
+            height: 27px;
+            width: 27px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        input:checked + .switch-slider { background-color: #34C759; }
+        input:checked + .switch-slider:before { transform: translateX(20px); }
+        
+        .switch-label { font-size: 15px; }
 
-        /* Toast Styles */
-        #toast-container {
+        .text-link {
+            color: var(--ios-blue);
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--ios-text-secondary);
+        }
+
+        /* Toast */
+        .toast-container {
             position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10000;
-            width: 90%;
-            max-width: 400px;
+            top: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 2000;
+            width: 90%; max-width: 400px;
             pointer-events: none;
         }
         .toast {
-            background: white;
-            padding: 16px 20px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex; align-items: center; gap: 12px;
             margin-bottom: 10px;
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            border-left: 5px solid #ddd;
-            pointer-events: auto;
+            opacity: 0; transform: translateY(-20px);
+            transition: all 0.4s ease;
         }
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .toast-icon {
-            font-size: 24px;
-            margin-right: 15px;
-            display: flex;
-            align-items: center;
-        }
-        .toast-content {
-            flex-grow: 1;
-        }
-        .toast-title {
-            font-weight: 600;
-            font-size: 15px;
-            margin-bottom: 2px;
-            color: #333;
-        }
-        .toast-message {
-            font-size: 13px;
-            color: #666;
-            line-height: 1.4;
-        }
-        .toast.success { border-left-color: #4CAF50; }
-        .toast.success .toast-icon { color: #4CAF50; }
-        .toast.error { border-left-color: #F44336; }
-        .toast.error .toast-icon { color: #F44336; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .t-icon { font-size: 22px; }
+        .t-success { color: var(--ios-success); }
+        .t-error { color: var(--ios-danger); }
+        .t-body { font-size: 15px; font-weight: 500; }
 
-        /* Spinner */
-        .spinner { display: inline-block; animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .spinner {
+            width: 20px; height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
     </style>
 </head>
 <body>
 
-    <div class="login-container">
-        <div class="header">
-            <img src="{{ asset('logo.png') }}" alt="MyGram Logo" class="logo">
-            <h1 class="welcome-text">Welcome Back</h1>
-            <p class="sub-text">Sign in to continue to MyGram</p>
-        </div>
-
-        <form id="loginForm" action="{{ route('login') }}" method="POST">
-            <div class="form-group">
-                <div class="input-group">
-                    <span class="input-icon"><i class="fas fa-phone-alt"></i></span>
-                    <input type="tel" name="phone" class="form-control" placeholder="Phone Number" required>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="input-group">
-                    <span class="input-icon"><i class="fas fa-lock"></i></span>
-                    <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
-                    <span class="password-toggle" id="togglePassword"><i class="fas fa-eye"></i></span>
-                </div>
-            </div>
-
-            <div class="options">
-                <label class="remember-me">
-                    <input type="checkbox" name="remember"> Remember me
-                </label>
-                <!-- <a href="#" class="forgot-pass">Forgot Password?</a> -->
-            </div>
-
-            <button type="submit" class="btn-login">
-                <span class="btn-text">Sign In</span>
-                <span class="spinner" style="display: none;"><i class="fas fa-circle-notch"></i></span>
-            </button>
-        </form>
-
-        <div class="footer-links">
-            Don't have an account? <a href="{{ route('register') }}">Sign Up</a>
-        </div>
+    <div class="hero-banner">
+        <img src="{{ asset('assets/images/fortuneflow_logo.png') }}" class="banner-img" alt="Banner">
     </div>
 
-    <div id="toast-container"></div>
+    <div class="content-wrapper">
+        
+        <div class="section-header">SIGN IN</div>
+        
+        <form id="loginForm" action="{{ route('login') }}" method="POST">
+            
+            <div class="ios-list-group">
+                <!-- Phone/Username Row -->
+                <div class="list-item">
+                    <div class="list-icon"><i class="fas fa-user"></i></div>
+                    <div class="item-inner">
+                        <input type="text" name="phone" class="ios-input" placeholder="Phone or Username" required>
+                    </div>
+                </div>
+                
+                <!-- Password Row -->
+                <div class="list-item">
+                    <div class="list-icon"><i class="fas fa-lock"></i></div>
+                    <div class="item-inner">
+                        <input type="password" name="password" id="password" class="ios-input" placeholder="Password" required>
+                        <button type="button" class="item-btn" id="passToggle">Show</button>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="primary-btn">
+                <span class="btn-text">Log In</span>
+                <div class="spinner"></div>
+            </button>
+
+            <div class="bottom-actions">
+                <label class="toggle-wrap">
+                    <label class="ios-switch">
+                        <input type="checkbox" name="remember" checked>
+                        <span class="switch-slider"></span>
+                    </label>
+                    <span class="switch-label">Remember Me</span>
+                </label>
+                <a href="#" class="text-link">Forgot Password?</a>
+            </div>
+
+        </form>
+
+        <div class="footer-text">
+            Don't have an account? <a href="{{ route('register') }}" class="text-link" style="font-weight:600;">Sign Up</a>
+        </div>
+
+    </div>
+
+    <div class="toast-container" id="toastCont"></div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function showToast(type, title, message) {
-            const icon = type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-exclamation-circle"></i>';
-            const toastHtml = `
-                <div class="toast ${type}">
-                    <div class="toast-icon">${icon}</div>
-                    <div class="toast-content">
-                        <div class="toast-title">${title}</div>
-                        <div class="toast-message">${message}</div>
-                    </div>
+        // Utils
+        const showToast = (msg, isErr = false) => {
+            const icon = isErr ? 'fa-exclamation-circle t-error' : 'fa-check-circle t-success';
+            const el = $(`
+                <div class="toast">
+                    <i class="fas ${icon} t-icon"></i>
+                    <div class="t-body">${msg}</div>
                 </div>
-            `;
-            
-            const $toast = $(toastHtml);
-            $('#toast-container').append($toast);
-            
-            // Trigger reflow
-            $toast[0].offsetHeight;
-            
-            $toast.addClass('show');
-            
+            `);
+            $('#toastCont').append(el);
+            el[0].offsetHeight; 
+            el.addClass('show');
             setTimeout(() => {
-                $toast.removeClass('show');
-                setTimeout(() => {
-                    $toast.remove();
-                }, 300);
+                el.removeClass('show');
+                setTimeout(() => el.remove(), 400);
             }, 3000);
-        }
+        };
 
-        function notify(status, msg) {
-            const title = status === 'success' ? 'Success' : 'Error';
-            showToast(status, title, msg);
-        }
+        $('#passToggle').on('click', function() {
+            const inp = $('#password');
+            const type = inp.attr('type') === 'password' ? 'text' : 'password';
+            inp.attr('type', type);
+            $(this).text(type === 'password' ? 'Show' : 'Hide');
+        });
 
-        function onRequestResponse(response) {
-            if (response.status === "success") {
-                notify("success", response.msg);
-                setTimeout(() => { window.location.href = "/dashboard"; }, 1500);
-            } else {
-                notify("error", response.msg);
-            }
-        }
+        $('#loginForm').on('submit', function(e) {
+            e.preventDefault();
+            const btn = $('.primary-btn');
+            const txt = $('.btn-text');
+            const spin = $('.spinner');
 
-        $(document).ready(function() {
-            $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
+            if(btn.prop('disabled')) return;
 
-            $('#togglePassword').on('click', function() {
-                const input = $('#password');
-                const icon = $(this).find('i');
-                if (input.attr('type') === 'password') {
-                    input.attr('type', 'text');
-                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
-                } else {
-                    input.attr('type', 'password');
-                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            btn.prop('disabled', true).css('opacity', '0.7');
+            txt.hide(); spin.show();
+
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                data: JSON.stringify(Object.fromEntries(new FormData(this))),
+                contentType: 'application/json',
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                success: function(res) {
+                    if(res.status === 'success') {
+                        showToast('Success', false);
+                        setTimeout(() => window.location.href = "/dashboard", 1000);
+                    } else {
+                        showToast(res.msg || 'Error', true);
+                        reset();
+                    }
+                },
+                error: function(e) {
+                    showToast('Connection Error', true);
+                    reset();
                 }
             });
 
-            $('#loginForm').on('submit', function(e) {
-                e.preventDefault();
-                const form = $(this);
-                const btn = form.find('.btn-login');
-                const btnText = btn.find('.btn-text');
-                const spinner = btn.find('.spinner');
-
-                btn.prop('disabled', true);
-                btnText.hide();
-                spinner.show();
-
-                const formData = {};
-                form.serializeArray().forEach(item => formData[item.name] = item.value);
-
-                $.ajax({
-                    url: form.attr('action'),
-                    method: form.attr('method'),
-                    contentType: 'application/json',
-                    data: JSON.stringify(formData),
-                    success: function(response) {
-                        onRequestResponse(response);
-                    },
-                    error: function(xhr) {
-                        let msg = 'Login failed. Please try again.';
-                        if (xhr.responseJSON) {
-                            msg = xhr.responseJSON.msg || xhr.responseJSON.message || msg;
-                        }
-                        notify('error', msg);
-                    },
-                    complete: function() {
-                        btn.prop('disabled', false);
-                        btnText.show();
-                        spinner.hide();
-                    }
-                });
-            });
+            function reset() {
+                btn.prop('disabled', false).css('opacity', '1');
+                txt.show(); spin.hide();
+            }
         });
     </script>
 </body>

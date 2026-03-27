@@ -2,373 +2,247 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, minimal-ui, viewport-fit=cover">
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.png">
-    <title>Recharge - MyGram</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover">
+    <title>Fund Wallet - FortuneFlow</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary: #ee667f;
-            --primary-dark: #d64d66;
-            --accent: #ff8fa3;
-            --bg-body: #f0f2f5;
-            --surface: #ffffff;
-            --text-main: #2d3436;
-            --text-sub: #636e72;
-            --glass: rgba(255, 255, 255, 0.9);
-            --shadow-sm: 0 4px 6px rgba(0,0,0,0.02);
-            --shadow-md: 0 10px 20px rgba(238, 102, 127, 0.15);
-            --radius-lg: 24px;
-            --radius-md: 16px;
+            --ios-bg: #0A0E1A;
+            --ios-card: #161B2D;
+            --ios-blue: #F1C40F;
+            --ios-gray: #A0AEC0;
+            --ios-divider: #2D3748;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-body); color: var(--text-main); padding-bottom: 100px; }
-        
-        .main-wrapper { max-width: 480px; margin: 0 auto; background: var(--bg-body); min-height: 100vh; position: relative; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--ios-bg);
+            color: #fff;
+            padding-bottom: 90px;
+            padding-top: max(20px, env(safe-area-inset-top));
+        }
 
         /* Header */
-        .hero-header {
-            background: linear-gradient(135deg, #ca526aff 0%, #528f9eff 100%);
-            padding: 20px 20px 60px;
-            border-radius: 0 0 40px 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-            margin-bottom: -40px;
-            text-align: center;
-            color: white;
-        }
-        .page-title { font-size: 22px; font-weight: 700; margin-bottom: 5px; }
-        .page-subtitle { font-size: 13px; opacity: 0.9; }
-
-        /* Content */
-        .section-container { padding: 0 20px; position: relative; z-index: 10; }
-
-        /* Balance Card */
-        .balance-card {
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 25px;
-            text-align: center;
-            box-shadow: var(--shadow-md);
-            margin-bottom: 25px;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.5);
-        }
-        .balance-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-        }
-        .balance-label { font-size: 13px; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-        .balance-amount { font-size: 32px; font-weight: 700; color: var(--primary); }
-
-        /* Form */
-        .recharge-form {
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 25px 20px;
-            box-shadow: var(--shadow-sm);
-            margin-bottom: 20px;
-        }
-        .form-label { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 10px; display: block; }
-        .input-group { position: relative; margin-bottom: 20px; }
-        .currency-symbol {
-            position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
-            font-size: 18px; color: var(--primary); font-weight: 600;
-        }
-        .amount-input {
-            width: 100%;
-            height: 55px;
-            border: 2px solid #f0f2f5;
-            border-radius: 16px;
-            padding: 0 20px 0 45px;
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text-main);
-            outline: none;
-            transition: all 0.3s;
-            font-family: 'Outfit', sans-serif;
-        }
-        .amount-input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(238, 102, 127, 0.1); }
-
-        /* Quick Amounts */
-        .quick-amounts {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-        .amount-btn {
-            background: #f8f9fa;
-            border: 1px solid transparent;
-            border-radius: 12px;
-            padding: 12px 5px;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-sub);
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: 'Outfit', sans-serif;
-        }
-        .amount-btn:active { transform: scale(0.95); }
-        .amount-btn.active {
-            background: rgba(238, 102, 127, 0.1);
-            color: var(--primary);
-            border-color: var(--primary);
-        }
-
-        /* Submit Button */
-        .submit-btn {
-            width: 100%;
-            height: 55px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            border: none;
-            border-radius: 16px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(238, 102, 127, 0.3);
-            transition: all 0.3s;
-            font-family: 'Outfit', sans-serif;
-        }
-        .submit-btn:active { transform: scale(0.98); box-shadow: 0 5px 10px rgba(238, 102, 127, 0.2); }
-
-        /* Info Box */
-        .info-box {
-            background: #fff0f3;
-            border-radius: 16px;
-            padding: 20px;
-            border: 1px dashed var(--accent);
-        }
-        .info-title { font-size: 14px; font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-        .info-list { list-style: none; }
-        .info-list li {
-            font-size: 12px; color: var(--text-sub); margin-bottom: 8px;
-            padding-left: 15px; position: relative; line-height: 1.5;
-        }
-        .info-list li::before {
-            content: ''; position: absolute; left: 0; top: 6px; width: 4px; height: 4px;
-            background: var(--primary); border-radius: 50%;
-        }
-
-        /* Floating Navigation */
-        .floating-nav {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 400px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
+        .page-header {
             padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            z-index: 1000;
-            border: 1px solid rgba(255,255,255,0.5);
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            position: relative;
         }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .history-btn {
+            position: absolute; right: 20px; top: 10px;
+            font-size: 14px; color: var(--ios-blue);
+        }
+
+        /* Container */
+        .r-container { padding: 0 20px; }
+
+        /* Balance */
+        .bal-card {
+            text-align: center; margin-bottom: 30px;
+        }
+        .bal-lbl { font-size: 13px; color: var(--ios-gray); margin-bottom: 5px; }
+        .bal-val { font-size: 34px; font-weight: 700; letter-spacing: -1px; }
+
+        /* Input Group */
+        .input-group {
+            background: var(--ios-card);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 25px;
+            display: flex; align-items: center;
+        }
+        .curr-sym { font-size: 20px; font-weight: 600; color: #fff; margin-right: 10px; }
+        .amt-inp {
+            flex: 1; border: none; outline: none; background: transparent;
+            font-size: 20px; font-weight: 600; color: #fff;
+        }
+        .amt-inp::placeholder { color: #C7C7CC; }
+
+        /* Chips */
+        .chip-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+            margin-bottom: 30px;
+        }
+        .chip {
+            background: var(--ios-card);
+            padding: 12px 5px; border-radius: 10px;
+            text-align: center; font-size: 14px; font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03); cursor: pointer;
+            transition: all 0.2s; color: #fff;
+        }
+        .chip:active { transform: scale(0.96); }
+        .chip.active { background: var(--ios-blue); color: white; }
+
+        /* Button */
+        .pay-btn {
+            width: 100%; padding: 16px;
+            background: var(--ios-blue); color: white;
+            border: none; border-radius: 14px;
+            font-size: 16px; font-weight: 700;
+            cursor: pointer; margin-bottom: 30px;
+        }
+        .pay-btn:active { opacity: 0.8; }
+
+        /* Rules */
+        .rules-box {
+            background: var(--ios-card);
+            border-radius: 12px; padding: 20px;
+        }
+        .rb-title { font-size: 13px; color: var(--ios-gray); text-transform: uppercase; font-weight: 600; margin-bottom: 15px; }
+        .rule-item {
+            font-size: 13px; color: #fff; margin-bottom: 10px;
+            display: flex; gap: 10px; line-height: 1.4;
+        }
+        .rule-icon { color: var(--ios-gray); margin-top: 2px; }
+
+        /* Navigation */
+        .ios-tab-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: rgba(16, 20, 35, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 0.5px solid rgba(255,255,255,0.1);
+            display: flex; justify-content: space-around;
+            padding-top: 10px;
+            padding-bottom: max(10px, env(safe-area-inset-bottom));
+            z-index: 100;
+        }
+        .tab-item {
             text-decoration: none;
-            color: #b2bec3;
-            font-size: 10px;
-            font-weight: 500;
-            gap: 4px;
-            transition: all 0.3s;
-            width: 50px;
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            color: #999;
+            flex: 1;
         }
-        .nav-item i { font-size: 20px; transition: transform 0.2s; }
-        .nav-item.active { color: var(--primary); }
-        .nav-item.active i { transform: translateY(-2px); }
-        
-        .nav-center {
-            width: 56px;
-            height: 56px;
-            background: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: -30px;
-            box-shadow: 0 8px 20px rgba(238, 102, 127, 0.4);
-            border: 4px solid var(--bg-body);
-            color: white;
-            font-size: 22px;
-            text-decoration: none;
+        .tab-item i { font-size: 22px; }
+        .tab-item span { font-size: 10px; font-weight: 600; }
+        .tab-item.active { color: var(--ios-blue); }
+
+        /* Toast */
+        #toast-box {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 9999; pointer-events: none; width: 90%; max-width: 380px;
         }
+        .c-toast {
+            background: #1e293b; color: white;
+            padding: 14px 20px; border-radius: 50px;
+            margin-bottom: 10px; display: flex; align-items: center; gap: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            opacity: 0; transform: translateY(-20px); transition: all 0.3s;
+        }
+        .c-toast.show { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body>
-    <div class="main-wrapper">
-        <!-- Header -->
-        <div class="hero-header">
-            <h1 class="page-title">Recharge</h1>
-            <p class="page-subtitle">Add funds to your wallet</p>
-        </div>
 
-        <!-- Content -->
-        <div class="section-container">
-            <!-- Balance Card -->
-            <div class="balance-card">
-                <div class="balance-label">Current Balance</div>
-                <div class="balance-amount">₦{{ number_format(auth()->user()->balance, 2) }}</div>
-            </div>
-
-            <!-- Virtual Account Section -->
-            <div class="balance-card" style="background: linear-gradient(135deg, #fff0f3 0%, #fff 100%); border-color: var(--primary);">
-                @if(auth()->user()->virtual_account_number)
-                    <div style="text-align: left;">
-                        <div class="balance-label" style="color: var(--primary);">Personal Virtual Account</div>
-                        
-                        <div style="margin-top: 15px;">
-                            <label style="font-size: 11px; color: #636e72;">Bank Name</label>
-                            <div style="font-weight: 700; font-size: 16px; margin-bottom: 10px;">
-                                {{ auth()->user()->virtual_bank_name }}
-                            </div>
-
-                            <label style="font-size: 11px; color: #636e72;">Account Number</label>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                                <div style="font-weight: 700; font-size: 20px; letter-spacing: 1px;">
-                                    {{ auth()->user()->virtual_account_number }}
-                                </div>
-                                <button onclick="copyText('{{ auth()->user()->virtual_account_number }}')" style="border: none; background: none; color: var(--primary); cursor: pointer;">
-                                    <i class="fa-regular fa-copy"></i> Copy
-                                </button>
-                            </div>
-
-                            <label style="font-size: 11px; color: #636e72;">Account Name</label>
-                            <div style="font-weight: 600; font-size: 14px;">
-                                {{ auth()->user()->virtual_account_name }}
-                            </div>
-                        </div>
-                        <div style="margin-top: 15px; font-size: 12px; color: var(--text-sub); background: white; padding: 10px; border-radius: 10px;">
-                            <i class="fa-solid fa-circle-info" style="color: var(--primary);"></i> 
-                            Transfer to this account to fund your wallet instantly.
-                        </div>
-                    </div>
-                @else
-                    <div class="balance-label" style="margin-bottom: 10px;">Dedicated Account</div>
-                    <p style="font-size: 13px; color: var(--text-sub); margin-bottom: 15px;">
-                        Get your own personal bank account number for instant wallet funding.
-                    </p>
-                    <form action="{{ route('user.generate_virtual_account') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="submit-btn" style="height: 45px; font-size: 14px; background: var(--text-main);">
-                            Generate Permanent Account
-                        </button>
-                    </form>
-                @endif
-            </div>
-
-            <!-- Recharge Form -->
-            <div class="recharge-form">
-                <form id="topupForm" action="/home/create_topup_order" method="POST">
-                    @csrf
-                    <label class="form-label">Enter Amount</label>
-                    <div class="input-group">
-                        <span class="currency-symbol">₦</span>
-                        <input id="topupAmount" type="number" class="amount-input" name="amount" placeholder="3000">
-                    </div>
-
-                    <label class="form-label">Quick Select</label>
-                    <div class="quick-amounts">
-                        <button type="button" class="amount-btn" data-amount="150">₦150</button>
-                        <button type="button" class="amount-btn" data-amount="5000">₦5,000</button>
-                        <button type="button" class="amount-btn" data-amount="12000">₦12,000</button>
-                        <button type="button" class="amount-btn" data-amount="40000">₦40,000</button>
-                        <button type="button" class="amount-btn" data-amount="70,000">₦70,000</button>
-                        <button type="button" class="amount-btn" data-amount="100000">₦100,000</button>
-                    </div>
-
-                    <button type="button" onclick="goPayment()" class="submit-btn">
-                        Recharge Now <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
-                    </button>
-                </form>
-            </div>
-
-            <!-- Info Box -->
-            <div class="info-box">
-                <div class="info-title"><i class="fa-solid fa-circle-info"></i> Recharge Policy</div>
-                <ul class="info-list">
-                    <li>Minimum deposit amount is <b>3,000 ₦</b>.</li>
-                    <li>Payment must be made according to the exact order amount.</li>
-                    <li>Balance will be credited within 5 minutes after successful payment.</li>
-                    <li>If not credited within 30 minutes, please contact Customer Service.</li>
-                </ul>
-            </div>
-        </div>
+    <div class="page-header">
+        Fund Wallet
+        <a href="{{ route('deposit.record') }}" class="history-btn">History</a>
     </div>
 
-    <!-- Floating Navigation -->
-    <div class="floating-nav">
-        <a href="/" class="nav-item">
-            <i class="fa-solid fa-house-chimney"></i>
-            <span>Home</span>
-        </a>
-        <a href="/invite" class="nav-item">
-            <i class="fa-solid fa-users-line"></i>
-            <span>Team</span>
-        </a>
-        <a href="/my/vip" class="nav-center">
-            <i class="fa-solid fa-layer-group"></i>
-        </a>
-        <a href="/history" class="nav-item">
-            <i class="fa-solid fa-clock-rotate-left"></i>
-            <span>History</span>
-        </a>
-        <a href="/mine" class="nav-item">
-            <i class="fa-regular fa-user"></i>
-            <span>Profile</span>
-        </a>
+    <div class="r-container">
+        
+        <div class="bal-card">
+            <div class="bal-lbl">Current Balance</div>
+            <div class="bal-val">₦{{ number_format(auth()->user()->balance, 2) }}</div>
+        </div>
+
+        <form id="topupForm" action="/home/create_topup_order" method="POST">
+            @csrf
+            
+                <!-- Normal Payment Flow -->
+                <div class="input-group">
+                    <span class="curr-sym">₦</span>
+                    <input id="topupAmount" type="number" class="amt-inp" name="amount" placeholder="0.00">
+                </div>
+
+                <div class="chip-grid">
+                    @foreach($packages as $pkg)
+                        <div class="chip" onclick="setAmt({{ $pkg->price }})">{{ number_format($pkg->price) }}</div>
+                    @endforeach
+                </div>
+
+                <button type="button" onclick="goPayment()" class="pay-btn">Proceed</button>
+
+        </form>
+
+
+        <div class="rules-box">
+            <div class="rb-title">Notes</div>
+            <div class="rule-item">
+                <i class="fas fa-info-circle rule-icon"></i>
+                <span>Minimum deposit is <strong>₦{{ number_format($setting->minimum_recharge) }}</strong>.</span>
+            </div>
+            <div class="rule-item">
+                <i class="fas fa-info-circle rule-icon"></i>
+                <span>Deposits are credited automatically.</span>
+            </div>
+            <div class="rule-item">
+                <i class="fas fa-info-circle rule-icon"></i>
+                <span>Use the exact account details provided on the next screen.</span>
+            </div>
+        </div>
+
     </div>
 
-    @include('alert-message')
+    <!-- Navigation -->
+    <nav class="ios-tab-bar">
+        <a href="/" class="tab-item"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="/my/vip" class="tab-item"><i class="fas fa-layer-group"></i><span>Plans</span></a>
+        <a href="/my-team" class="tab-item"><i class="fas fa-users"></i><span>Team</span></a>
+        <a href="/mine" class="tab-item"><i class="far fa-user"></i><span>Profile</span></a>
+    </nav>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <div id="toast-box"></div>
+
     <script>
-        $(document).ready(function() {
-            // Quick Amount Selection
-            $('.amount-btn').on('click', function() {
-                $('.amount-btn').removeClass('active');
-                $(this).addClass('active');
-                
-                // Remove non-numeric characters for value
-                const amount = $(this).data('amount');
-                $('#topupAmount').val(amount);
-            });
-
-            // Input Change
-            $('#topupAmount').on('input', function() {
-                $('.amount-btn').removeClass('active');
-                const currentAmount = $(this).val();
-                $(`.amount-btn[data-amount="${currentAmount}"]`).addClass('active');
-            });
-        });
+        function setAmt(val) {
+            document.getElementById('topupAmount').value = val;
+            document.querySelectorAll('.chip').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+        }
 
         function goPayment(){
-            let amount = document.querySelector('#topupAmount').value;
-
-            if (!amount || amount < 100) {
-                alert('Minimum recharge amount is 100 ₦');
+            let amount = document.getElementById('topupAmount').value;
+            // Use dynamic minimum from server
+            let minAmount = {{ $setting->minimum_recharge }};
+            
+            if (!amount || parseFloat(amount) < minAmount) {
+                if (typeof iOSAlert !== 'undefined') {
+                    iOSAlert.fire({
+                        icon: 'warning',
+                        title: 'Minimum Deposit',
+                        text: "Minimum deposit is ₦" + minAmount.toLocaleString(),
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    alert("Minimum deposit is ₦" + minAmount.toLocaleString());
+                }
                 return;
             }
-
             document.getElementById('topupForm').submit();
         }
-        function copyText(text) {
-            navigator.clipboard.writeText(text).then(function() {
-                alert('Account number copied!');
-            }, function(err) {
-                console.error('Async: Could not copy text: ', err);
-            });
+
+        function toast(msg) {
+            let box = document.getElementById('toast-box');
+            let el = document.createElement('div');
+            el.className = 'c-toast';
+            el.innerHTML = `<i class="fas fa-check-circle" style="color:#4ade80"></i> <span>${msg}</span>`;
+            box.appendChild(el);
+            void el.offsetWidth; el.classList.add('show');
+            setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 300); }, 3000);
         }
     </script>
+    
+    @include('alert-message')
 </body>
 </html>

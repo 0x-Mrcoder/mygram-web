@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('settings', function (Blueprint $table) {
-            $table->string('payment_mode')->default('manual')->after('withdraw_status');
-        });
+        if (!Schema::hasColumn('settings', 'payment_mode')) {
+            Schema::table('settings', function (Blueprint $table) {
+                $table->string('payment_mode')->default('manual');
+            });
+        }
     }
 
     /**

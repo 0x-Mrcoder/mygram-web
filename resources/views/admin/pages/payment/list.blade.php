@@ -33,6 +33,7 @@
                                                 <small>
                                                     Name: {{$row->user->name ?? '--'}}  <br>
                                                     Ref_id: {{$row->user->ref_id ?? '--'}} <br>
+                                                    Sender: <strong class="text-primary">{{$row->sender_name ?? '--'}}</strong> <br>
                                                 </small>
                                             </td>
                                             <td>

@@ -2,311 +2,267 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, minimal-ui, viewport-fit=cover">
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.png">
-    <title>Bank Info - MyGram</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover">
+    <title>Bank Account - FortuneFlow</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <style>
         :root {
-            --primary: #ee667f;
-            --primary-dark: #d64d66;
-            --accent: #ff8fa3;
-            --bg-body: #f0f2f5;
-            --surface: #ffffff;
-            --text-main: #2d3436;
-            --text-sub: #636e72;
-            --glass: rgba(255, 255, 255, 0.9);
-            --shadow-sm: 0 4px 6px rgba(0,0,0,0.02);
-            --shadow-md: 0 10px 20px rgba(238, 102, 127, 0.15);
-            --radius-lg: 24px;
-            --radius-md: 16px;
+            --ios-bg: #0A0E1A;
+            --ios-card: #161B2D;
+            --ios-blue: #F1C40F;
+            --ios-gray: #A0AEC0;
+            --ios-red: #E74C3C;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-body); color: var(--text-main); padding-bottom: 100px; }
-        
-        .main-wrapper { max-width: 480px; margin: 0 auto; background: var(--bg-body); min-height: 100vh; position: relative; }
 
-        /* Header */
-        .hero-header {
-            background: linear-gradient(135deg, #ca526aff 0%, #528f9eff 100%);
-            padding: 20px 20px 60px;
-            border-radius: 0 0 40px 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-            margin-bottom: -40px;
-            text-align: center;
-            color: white;
-        }
-        .page-title { font-size: 22px; font-weight: 700; margin-bottom: 5px; }
-        .page-subtitle { font-size: 13px; opacity: 0.9; }
-
-        /* Content */
-        .section-container { padding: 0 20px; position: relative; z-index: 10; }
-
-        /* Add Card Box */
-        .add-card-box {
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 40px 20px;
-            text-align: center;
-            box-shadow: var(--shadow-md);
-            margin-bottom: 25px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px dashed rgba(238, 102, 127, 0.3);
-        }
-        .add-card-box:active { transform: scale(0.98); background: #fff0f3; }
-        .add-icon {
-            width: 70px; height: 70px; background: #fff0f3; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 15px; color: var(--primary); font-size: 28px;
-            box-shadow: 0 5px 15px rgba(238, 102, 127, 0.2);
-        }
-        .add-text { font-size: 16px; font-weight: 600; color: var(--text-main); }
-        .add-subtext { font-size: 12px; color: var(--text-sub); margin-top: 5px; }
-
-        /* Form */
-        .bank-form {
-            display: none;
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 25px 20px;
-            box-shadow: var(--shadow-sm);
-            animation: slideUp 0.4s ease forwards;
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--ios-bg);
+            color: #fff;
+            padding-bottom: 90px;
+            padding-top: max(20px, env(safe-area-inset-top));
         }
 
-        .form-group { margin-bottom: 20px; }
-        .form-label { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; display: block; }
-        .form-control {
-            width: 100%;
-            height: 50px;
-            border: 2px solid #f0f2f5;
-            border-radius: 16px;
-            padding: 0 20px;
-            font-size: 15px;
-            color: var(--text-main);
-            outline: none;
-            transition: all 0.3s;
-            font-family: 'Outfit', sans-serif;
-            background: #fcfcfc;
-        }
-        .form-control:focus { border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(238, 102, 127, 0.1); }
-        select.form-control { appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ee667f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 20px center; background-size: 16px; }
-
-        /* Submit Button */
-        .submit-btn {
-            width: 100%;
-            height: 55px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            border: none;
-            border-radius: 16px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(238, 102, 127, 0.3);
-            transition: all 0.3s;
-            font-family: 'Outfit', sans-serif;
-            margin-top: 10px;
-        }
-        .submit-btn:active { transform: scale(0.98); box-shadow: 0 5px 10px rgba(238, 102, 127, 0.2); }
-
-        /* Floating Navigation */
-        .floating-nav {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 400px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
+        .page-header {
             padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            z-index: 1000;
-            border: 1px solid rgba(255,255,255,0.5);
+            text-align: center;
+            font-size: 17px; font-weight: 600;
+            margin-bottom: 20px;
         }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: #b2bec3;
-            font-size: 10px;
-            font-weight: 500;
-            gap: 4px;
-            transition: all 0.3s;
-            width: 50px;
-        }
-        .nav-item i { font-size: 20px; transition: transform 0.2s; }
-        .nav-item.active { color: var(--primary); }
-        .nav-item.active i { transform: translateY(-2px); }
-        
-        .nav-center {
-            width: 56px;
-            height: 56px;
-            background: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: -30px;
-            box-shadow: 0 8px 20px rgba(238, 102, 127, 0.4);
-            border: 4px solid var(--bg-body);
+
+        .bk-container { padding: 0 20px; }
+
+        /* Wallet Card */
+        .u-card {
+            background: linear-gradient(135deg, #161B2D, #2D3748);
+            border-radius: 16px;
+            padding: 20px;
             color: white;
-            font-size: 22px;
-            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative; overflow: hidden;
+            height: 200px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            margin-bottom: 25px;
         }
+        .u-card::after {
+            content: ''; position: absolute; top: -50px; right: -50px;
+            width: 150px; height: 150px; background: rgba(255,255,255,0.05);
+            border-radius: 50%; pointer-events: none;
+        }
+        
+        .c-bank { font-size: 18px; font-weight: 700; }
+        .c-num { font-size: 24px; letter-spacing: 2px; font-weight: 600; font-family: monospace; text-align: center; }
+        .c-name { font-size: 14px; opacity: 0.8; }
+        .c-chip { width: 40px; height: 30px; background: rgba(255,255,255,0.2); border-radius: 6px; }
+
+        /* Add Button */
+        .add-area {
+            text-align: center; padding: 40px 20px;
+            background: var(--ios-card); border-radius: 16px;
+            border: 1px dashed #2D3748; cursor: pointer;
+            color: #fff;
+        }
+        .add-area:active { background: #2D3748; }
+        .aa-icon { font-size: 30px; color: var(--ios-blue); margin-bottom: 10px; }
+        .aa-text { font-size: 15px; font-weight: 600; }
+
+        /* Actions */
+        .action-row {
+            margin-top: 20px;
+            display: flex; gap: 15px;
+        }
+        .act-btn {
+            flex: 1; padding: 14px;
+            background: var(--ios-card); border-radius: 12px;
+            text-align: center; font-weight: 600; font-size: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); color: var(--ios-blue);
+            cursor: pointer;
+        }
+        .act-btn:active { background: #2D3748; }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4); z-index: 999;
+            display: none;
+        }
+        .modal-overlay.show {
+            display: block;
+        }
+        .modal-sheet {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: #161B2D; border-radius: 14px 14px 0 0;
+            padding: 20px 20px 40px; 
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1000;
+            color: #fff;
+        }
+        .modal-overlay.show .modal-sheet { 
+            transform: translateY(0); 
+        }
+
+        .form-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 25px;
+        }
+        .fh-title { font-size: 17px; font-weight: 600; }
+        .fh-close { color: var(--ios-blue); font-weight: 600; cursor: pointer; }
+
+        .inp-group { background: #2D3748; border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
+        .inp-row {
+            display: flex; align-items: center; padding: 12px 15px;
+            border-bottom: 1px solid #161B2D;
+        }
+        .inp-row:last-child { border-bottom: none; }
+        .ir-lbl { width: 100px; font-size: 15px; }
+        .ir-field {
+            flex: 1; border: none; outline: none; font-size: 15px;
+            background: transparent; color: #fff;
+        }
+        .ir-field::placeholder { color: #C7C7CC; }
+
+        .save-btn {
+            width: 100%; padding: 16px; background: var(--ios-blue);
+            color: #000; border: none; border-radius: 12px;
+            font-size: 16px; font-weight: 600; cursor: pointer;
+        }
+
+        /* Navigation */
+        .ios-tab-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: rgba(16, 20, 35, 0.95); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); border-top: 0.5px solid rgba(255,255,255,0.1);
+            display: flex; justify-content: space-around;
+            padding-top: 10px; padding-bottom: max(10px, env(safe-area-inset-bottom));
+            z-index: 100;
+        }
+        .tab-item {
+            text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 4px;
+            color: #999; flex: 1;
+        }
+        .tab-item i { font-size: 22px; }
+        .tab-item span { font-size: 10px; font-weight: 600; }
+        .tab-item.active { color: var(--ios-blue); }
+
     </style>
 </head>
 <body>
-    <div class="main-wrapper">
-        <!-- Header -->
-        <div class="hero-header">
-            <h1 class="page-title">Bank Info</h1>
-            <p class="page-subtitle">Manage your withdrawal method</p>
-        </div>
 
-        <!-- Content -->
-        <div class="section-container">
+    <div class="page-header">Bank Account</div>
+
+    <div class="bk-container">
+        @if(auth()->user()->gateway_number)
+            <div class="u-card">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="c-bank">{{ auth()->user()->gateway_method }}</span>
+                    <div class="c-chip"></div>
+                </div>
+                <div class="c-num p-display">{{ substr(auth()->user()->gateway_number, 0, 4) }} **** {{ substr(auth()->user()->gateway_number, -4) }}</div>
+                <div class="c-name">{{ auth()->user()->holder_name }}</div>
+            </div>
             
-            <div class="add-card-box" onclick="showBankForm()">
-                <div class="add-icon"><i class="fa-solid fa-credit-card"></i></div>
-                <div class="add-text">Add Bank Card</div>
-                <div class="add-subtext">Click to add your bank details</div>
+            <div class="action-row">
+                <div class="act-btn" onclick="openModal()">Edit Account</div>
+            </div>
+        @else
+            <div class="add-area" onclick="openModal()">
+                <div class="aa-icon"><i class="fas fa-plus-circle"></i></div>
+                <div class="aa-text">Add Bank Account</div>
+            </div>
+        @endif
+    </div>
+
+    <!-- Modal -->
+    <div id="bankModal" class="modal-overlay" onclick="closeModal()">
+        <div class="modal-sheet" onclick="event.stopPropagation()">
+            <div class="form-header">
+                <div class="fh-close" onclick="closeModal()">Cancel</div>
+                <div class="fh-title">Bank Details</div>
+                <div class="fh-close" style="opacity:0;">Done</div>
             </div>
 
-            <div class="bank-form" id="bankForm">
-                <form action="{{ route('setup.gateway.submit') }}" method="POST">
-                    @csrf
-                    
-                    <div class="form-group">
-                        <label class="form-label">Select Bank</label>
-                        <select class="form-control" name="gateway_method" id="bankSelect" required>
-                            <option value="">Choose your bank</option>
-                            @foreach($banks as $bank)
-                                <option value="{{ $bank['bankCode'] }}">{{ $bank['bankName'] }}</option>
-                            @endforeach
+            <form action="{{ route('setup.gateway.submit') }}" method="POST">
+                @csrf
+                <div class="inp-group">
+                    <div class="inp-row">
+                        <label class="ir-lbl">Bank</label>
+                        <select class="ir-field" name="gateway_method" id="bankSelect" required>
+                            <option value="">Select Bank</option>
+                            <option value="OPay">OPay</option>
+                            <option value="PalmPay">PalmPay</option>
+                            <option value="Moniepoint">Moniepoint</option>
+                            <option value="Kuda Bank">Kuda Bank</option>
+                            <option value="Access Bank">Access Bank</option>
+                            <option value="Zenith Bank">Zenith Bank</option>
+                            <option value="GTBank">Guaranty Trust Bank</option>
+                            <option value="First Bank">First Bank of Nigeria</option>
+                            <option value="UBA">United Bank for Africa</option>
+                            <option value="Fidelity Bank">Fidelity Bank</option>
+                            <option value="Stanbic IBTC">Stanbic IBTC Bank</option>
+                            <option value="Sterling Bank">Sterling Bank</option>
+                            <option value="Wema Bank">Wema Bank</option>
+                            <option value="FCMB">First City Monument Bank</option>
+                            <option value="Union Bank">Union Bank</option>
+                            <option value="Unity Bank">Unity Bank</option>
+                            <option value="Polaris Bank">Polaris Bank</option>
+                            <option value="Keystone Bank">Keystone Bank</option>
+                            <option value="Heritage Bank">Heritage Bank</option>
+                            <option value="Jaiz Bank">Jaiz Bank</option>
+                            <option value="Taj Bank">Taj Bank</option>
+                            <option value="Lotus Bank">Lotus Bank</option>
+                            <option value="Globus Bank">Globus Bank</option>
+                            <option value="Providus Bank">Providus Bank</option>
+                            <option value="Parallex Bank">Parallex Bank</option>
+                            <option value="SunTrust Bank">SunTrust Bank</option>
+                            <option value="Titan Trust Bank">Titan Trust Bank</option>
+                            <option value="Premium Trust Bank">Premium Trust Bank</option>
+                            <option value="VBank">VBank (VFD Microfinance)</option>
+                            <option value="FairMoney MFB">FairMoney Microfinance Bank</option>
+                            <option value="Carbon">Carbon</option>
+                            <option value="Paga">Paga</option>
+                            <option value="Chipper Cash">Chipper Cash</option>
                         </select>
                     </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Account Number</label>
-                        <input class="form-control" name="gateway_number" id="accountNumber" value="{{ auth()->user()->gateway_number }}" placeholder="e.g. 1234567890" required>
+                    <div class="inp-row">
+                        <label class="ir-lbl">Account</label>
+                        <input type="tel" class="ir-field" name="gateway_number" id="accountNumber" placeholder="1234567890" maxlength="10" required>
                     </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Account Holder Name</label>
-                        <input class="form-control" name="holdername" id="holderName" value="{{ auth()->user()->holder_name }}" placeholder="e.g. John Doe" required readonly>
+                    <div class="inp-row">
+                        <label class="ir-lbl">Name</label>
+                        <input type="text" class="ir-field" name="holdername" id="holderName" placeholder="Enter Account Name" required>
                     </div>
+                </div>
 
-                    <button type="submit" class="submit-btn">
-                        Save Details <i class="fa-solid fa-check-circle" style="margin-left: 8px;"></i>
-                    </button>
-                </form>
-            </div>
+                <button type="submit" class="save-btn">Save</button>
+            </form>
         </div>
     </div>
 
-    <!-- Floating Navigation -->
-    <div class="floating-nav">
-        <a href="/" class="nav-item">
-            <i class="fa-solid fa-house-chimney"></i>
-            <span>Home</span>
-        </a>
-        <a href="/invite" class="nav-item">
-            <i class="fa-solid fa-users-line"></i>
-            <span>Team</span>
-        </a>
-        <a href="/my/vip" class="nav-center">
-            <i class="fa-solid fa-layer-group"></i>
-        </a>
-        <a href="/history" class="nav-item">
-            <i class="fa-solid fa-clock-rotate-left"></i>
-            <span>History</span>
-        </a>
-        <a href="/mine" class="nav-item">
-            <i class="fa-regular fa-user"></i>
-            <span>Profile</span>
-        </a>
-    </div>
-
+    <nav class="ios-tab-bar">
+        <a href="/" class="tab-item"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="/my/vip" class="tab-item"><i class="fas fa-layer-group"></i><span>Plans</span></a>
+        <a href="/my-team" class="tab-item"><i class="fas fa-users"></i><span>Team</span></a>
+        <a href="/mine" class="tab-item"><i class="far fa-user"></i><span>Profile</span></a>
+    </nav>
+    
     @include('alert-message')
 
     <script>
-        function showBankForm() {
-            document.querySelector('.add-card-box').style.display = 'none';
-            document.getElementById('bankForm').style.display = 'block';
-        }
-
-        const bankSelect = document.getElementById('bankSelect');
-        const accountNumberInput = document.getElementById('accountNumber');
-        const holderNameInput = document.getElementById('holderName');
-
-        function validateAccount() {
-            const bankCode = bankSelect.value;
-            const accountNumber = accountNumberInput.value;
-
-            if (bankCode && accountNumber.length >= 10) {
-                holderNameInput.value = 'Validating...';
-                
-                fetch('{{ route("validate.bank.account") }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        bank_code: bankCode,
-                        account_number: accountNumber
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status) {
-                        holderNameInput.value = data.account_name;
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Account Verified',
-                            text: 'Account name: ' + data.account_name,
-                            timer: 2000,
-                            showConfirmButton: false
-                        });
-                    } else {
-                        holderNameInput.value = '';
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Failed',
-                            text: data.message || 'Could not validate account details.',
-                            confirmButtonColor: '#ee667f'
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    holderNameInput.value = '';
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'An error occurred during validation',
-                        confirmButtonColor: '#ee667f'
-                    });
-                });
-            }
-        }
-
-        bankSelect.addEventListener('change', validateAccount);
-        accountNumberInput.addEventListener('input', validateAccount);
+        // Global modal functions
+        window.openModal = function() { 
+            document.getElementById('bankModal').classList.add('show');
+        };
+        
+        window.closeModal = function() { 
+            document.getElementById('bankModal').classList.remove('show');
+        };
     </script>
 </body>
 </html>

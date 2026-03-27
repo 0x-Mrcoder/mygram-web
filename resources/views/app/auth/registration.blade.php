@@ -2,335 +2,340 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Register - MyGram</title>
+    <title>Join - FortuneFlow</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         :root {
-            --primary-color: #ee667f;
-            --primary-gradient: linear-gradient(135deg, #ff8fa3 0%, #ee667f 100%);
-            --secondary-color: #333;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --input-bg: #f0f2f5;
-            --text-color: #333;
-            --text-muted: #888;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            /* Royal Gold & Midnight Navy */
+            --ios-bg: #0A0E1A; 
+            --ios-card: #161B2D;
+            --ios-separator: #2D3748;
+            --ios-blue: #F1C40F; /* Gold */
+            --ios-text: #FFFFFF;
+            --ios-text-secondary: #A0AEC0;
+            --ios-danger: #E74C3C;
+            --ios-success: #27AE60;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Poppins', sans-serif; background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-        
-        .register-container {
-            width: 100%;
-            max-width: 400px;
-            padding: 30px;
-            background: var(--card-bg);
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--ios-bg);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            color: var(--ios-text);
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            width: 100%;
+            background: #fff;
+            padding-bottom: 20px;
+            display: flex;
             justify-content: center;
+            align-items: center;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+        }
+        .banner-img {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            object-fit: cover;
         }
 
-        @media (min-width: 480px) {
-            .register-container {
-                min-height: auto;
-                border-radius: 30px;
-                box-shadow: var(--shadow);
-                margin: 20px;
-            }
+        /* Content Wrapper */
+        .content-wrapper {
+            flex: 1;
+            padding: 32px 16px;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
         }
 
-        .header { text-align: center; margin-bottom: 1px; }
-        .logo { width: 250px; height: auto; margin-bottom: 15px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
-        .welcome-text { font-size: 22px; font-weight: 700; margin-top: -90px; color: var(--secondary-color); margin-bottom: 5px; }
-        .sub-text { font-size: 14px; color: var(--text-muted); }
+        .section-header {
+            margin-bottom: 15px;
+            padding-left: 16px;
+            text-transform: uppercase;
+            font-size: 13px;
+            color: var(--ios-text-secondary);
+            font-weight: 400;
+        }
 
-        .form-group { margin-bottom: 15px; }
-        .input-group {
-            position: relative;
-            background: var(--input-bg);
-            border-radius: 15px;
-            padding: 5px 15px;
+        /* iOS Grouped List */
+        .ios-list-group {
+            background: var(--ios-card);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .list-item {
             display: flex;
             align-items: center;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
+            padding-left: 16px;
+            background: var(--ios-card);
+            min-height: 50px;
         }
-        .input-group:focus-within {
-            background: #fff;
-            border-color: var(--primary-color);
-            box-shadow: 0 4px 15px rgba(238, 102, 127, 0.1);
-        }
-        .input-icon { color: var(--text-muted); font-size: 18px; margin-right: 10px; width: 20px; text-align: center; }
-        .input-group:focus-within .input-icon { color: var(--primary-color); }
-        
-        .form-control {
-            border: none;
-            background: transparent;
-            width: 100%;
-            padding: 12px 0;
-            font-size: 15px;
-            color: var(--text-color);
-            outline: none;
-            font-family: inherit;
-        }
-        .form-control::placeholder { color: #aaa; }
 
-        .password-toggle { cursor: pointer; color: var(--text-muted); padding: 5px; }
-        
-        .btn-register {
-            width: 100%;
-            padding: 16px;
+        .list-item:not(:last-child) .item-inner {
+            border-bottom: 0.5px solid var(--ios-separator);
+        }
+
+        .item-inner {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding-right: 16px;
+            height: 50px;
+        }
+
+        .list-icon {
+            font-size: 20px;
+            color: var(--ios-blue);
+            width: 30px;
+            text-align: left;
+        }
+
+        .ios-input {
+            flex: 1;
             border: none;
-            border-radius: 15px;
-            background: var(--primary-gradient);
+            outline: none;
+            font-size: 17px;
+            height: 100%;
+            font-family: inherit;
+            color: var(--ios-text);
+            background: transparent !important;
+        }
+        .ios-input::placeholder { color: #8E8E93; }
+
+        /* Fix for White/Yellow Autofill Background */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px var(--ios-card) inset !important;
+            -webkit-text-fill-color: var(--ios-text) !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        .item-btn {
+            background: none;
+            border: none;
+            color: var(--ios-blue);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Submit Button */
+        .primary-btn {
+            width: 100%;
+            background: var(--ios-blue);
             color: white;
-            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            padding: 14px;
+            font-size: 17px;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(238, 102, 127, 0.3);
-            transition: transform 0.2s, box-shadow 0.2s;
-            position: relative;
-            overflow: hidden;
-            margin-top: 10px;
+            transition: opacity 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
         }
-        .btn-register:active { transform: scale(0.98); box-shadow: 0 5px 10px rgba(238, 102, 127, 0.2); }
-        .btn-register:disabled { opacity: 0.7; cursor: not-allowed; }
+        .primary-btn:active { opacity: 0.6; }
 
-        .footer-links { text-align: center; margin-top: 25px; font-size: 14px; color: var(--text-muted); }
-        .footer-links a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
+        .bottom-actions { margin-top: 20px; text-align: center; }
+        .text-link { color: var(--ios-blue); text-decoration: none; font-weight: 600; }
 
-        /* Toast Styles */
-        #toast-container {
+        /* Toast */
+        .toast-container {
             position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10000;
-            width: 90%;
-            max-width: 400px;
+            top: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 2000;
+            width: 90%; max-width: 400px;
             pointer-events: none;
         }
         .toast {
-            background: white;
-            padding: 16px 20px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex; align-items: center; gap: 12px;
             margin-bottom: 10px;
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            border-left: 5px solid #ddd;
-            pointer-events: auto;
+            opacity: 0; transform: translateY(-20px);
+            transition: all 0.4s ease;
         }
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .toast-icon {
-            font-size: 24px;
-            margin-right: 15px;
-            display: flex;
-            align-items: center;
-        }
-        .toast-content {
-            flex-grow: 1;
-        }
-        .toast-title {
-            font-weight: 600;
-            font-size: 15px;
-            margin-bottom: 2px;
-            color: #333;
-        }
-        .toast-message {
-            font-size: 13px;
-            color: #666;
-            line-height: 1.4;
-        }
-        .toast.success { border-left-color: #4CAF50; }
-        .toast.success .toast-icon { color: #4CAF50; }
-        .toast.error { border-left-color: #F44336; }
-        .toast.error .toast-icon { color: #F44336; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .t-icon { font-size: 22px; }
+        .t-success { color: var(--ios-success); }
+        .t-error { color: var(--ios-danger); }
+        .t-body { font-size: 15px; font-weight: 500; }
 
-        /* Spinner */
-        .spinner { display: inline-block; animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .spinner {
+            width: 20px; height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
     </style>
 </head>
 <body>
 
-    <div class="register-container">
-        <div class="header">
-            <img src="{{ asset('logo.png') }}" alt="MyGram Logo" class="logo">
-            <h1 class="welcome-text">Create Account</h1>
-            <p class="sub-text">Join MyGram today</p>
-        </div>
-
-        <form id="registerForm" action="{{ route('register') }}" method="POST">
-            <div class="form-group">
-                <div class="input-group">
-                    <span class="input-icon"><i class="fas fa-phone-alt"></i></span>
-                    <input type="tel" name="phone" id="phone" class="form-control" placeholder="Mobile Number" required pattern="[0-9]+">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="input-group">
-                    <span class="input-icon"><i class="fas fa-lock"></i></span>
-                    <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
-                    <span class="password-toggle" id="togglePassword"><i class="fas fa-eye"></i></span>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="input-group">
-                    <span class="input-icon"><i class="fas fa-lock"></i></span>
-                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Confirm Password" required>
-                    <span class="password-toggle" id="toggleConfirmPassword"><i class="fas fa-eye"></i></span>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="input-group">
-                    <span class="input-icon"><i class="fas fa-users"></i></span>
-                    <input type="text" name="ref_id" id="ref_id" class="form-control" placeholder="Invitation Code (Optional)" value="{{ $ref_by ?? '' }}">
-                </div>
-            </div>
-
-            <button type="submit" class="btn-register">
-                <span class="btn-text">Sign Up</span>
-                <span class="spinner" style="display: none;"><i class="fas fa-circle-notch"></i></span>
-            </button>
-        </form>
-
-        <div class="footer-links">
-            Already have an account? <a href="{{ route('login') }}">Sign In</a>
-        </div>
+    <div class="hero-banner">
+        <img src="{{ asset('assets/images/fortuneflow_logo.png') }}" class="banner-img" alt="Banner">
     </div>
 
-    <div id="toast-container"></div>
+    <div class="content-wrapper">
+        
+        <div class="section-header">CREATE ACCOUNT</div>
+        
+        <form id="regForm" action="{{ route('register') }}" method="POST">
+            
+            <div class="ios-list-group">
+                <!-- Username -->
+                <div class="list-item">
+                    <div class="list-icon"><i class="fas fa-user"></i></div>
+                    <div class="item-inner">
+                        <input type="text" name="username" class="ios-input" placeholder="Desired Username" required>
+                    </div>
+                </div>
+
+                <!-- Phone -->
+                <div class="list-item">
+                    <div class="list-icon"><i class="fas fa-phone-alt"></i></div>
+                    <div class="item-inner">
+                        <input type="tel" name="phone" class="ios-input" placeholder="Phone Number" required>
+                    </div>
+                </div>
+                
+                <!-- Password -->
+                <div class="list-item">
+                    <div class="list-icon"><i class="fas fa-lock"></i></div>
+                    <div class="item-inner">
+                        <input type="password" name="password" id="password" class="ios-input" placeholder="Create Password" required>
+                        <button type="button" class="item-btn toggler" data-target="#password">Show</button>
+                    </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="list-item">
+                    <div class="list-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="item-inner">
+                        <input type="password" name="password_confirmation" id="password_confirmation" class="ios-input" placeholder="Confirm Password" required>
+                    </div>
+                </div>
+
+                <!-- Referral -->
+                <div class="list-item">
+                    <div class="list-icon"><i class="fas fa-user-tag"></i></div>
+                    <div class="item-inner">
+                        <input type="text" name="ref_id" class="ios-input" placeholder="Referral Code (Optional)" value="{{ $ref_by ?? '' }}">
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="primary-btn">
+                <span class="btn-text">Sign Up</span>
+                <div class="spinner"></div>
+            </button>
+
+            <div class="bottom-actions">
+                <span style="color:var(--ios-text-secondary); font-size:15px;">Already have an account?</span>
+                <a href="{{ route('login') }}" class="text-link">Log In</a>
+            </div>
+
+        </form>
+
+    </div>
+
+    <div class="toast-container" id="toastCont"></div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function showToast(type, title, message) {
-            const icon = type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-exclamation-circle"></i>';
-            const toastHtml = `
-                <div class="toast ${type}">
-                    <div class="toast-icon">${icon}</div>
-                    <div class="toast-content">
-                        <div class="toast-title">${title}</div>
-                        <div class="toast-message">${message}</div>
-                    </div>
+        // Utils
+        const showToast = (msg, isErr = false) => {
+            const icon = isErr ? 'fa-exclamation-circle t-error' : 'fa-check-circle t-success';
+            const el = $(`
+                <div class="toast">
+                    <i class="fas ${icon} t-icon"></i>
+                    <div class="t-body">${msg}</div>
                 </div>
-            `;
-            
-            const $toast = $(toastHtml);
-            $('#toast-container').append($toast);
-            
-            // Trigger reflow
-            $toast[0].offsetHeight;
-            
-            $toast.addClass('show');
-            
+            `);
+            $('#toastCont').append(el);
+            el[0].offsetHeight; 
+            el.addClass('show');
             setTimeout(() => {
-                $toast.removeClass('show');
-                setTimeout(() => {
-                    $toast.remove();
-                }, 300);
+                el.removeClass('show');
+                setTimeout(() => el.remove(), 400);
             }, 3000);
-        }
+        };
 
-        function notify(status, msg) {
-            const title = status === 'success' ? 'Success' : 'Error';
-            showToast(status, title, msg);
-        }
+        $('.toggler').on('click', function() {
+            const target = $(this).data('target');
+            const inp = $(target);
+            const type = inp.attr('type') === 'password' ? 'text' : 'password';
+            inp.attr('type', type);
+            $(this).text(type === 'password' ? 'Show' : 'Hide');
+        });
 
-        function onRequestResponse(response) {
-            if (response.status === "success") {
-                notify("success", response.msg);
-                setTimeout(() => { window.location.href = "/dashboard"; }, 1500);
-            } else {
-                notify("error", response.msg);
-            }
-        }
+        $('#regForm').on('submit', function(e) {
+            e.preventDefault();
 
-        $(document).ready(function() {
-            $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
+            // Client Validation
+            const p1 = $('#password').val();
+            const p2 = $('#password_confirmation').val();
+            if(p1 !== p2) { showToast("Passwords do not match", true); return; }
 
-            function togglePasswordVisibility(fieldId, toggleButtonId) {
-                const input = $(fieldId);
-                const icon = $(toggleButtonId).find('i');
-                if (input.attr('type') === 'password') {
-                    input.attr('type', 'text');
-                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
-                } else {
-                    input.attr('type', 'password');
-                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
-                }
-            }
+            const btn = $('.primary-btn');
+            const txt = $('.btn-text');
+            const spin = $('.spinner');
 
-            $('#togglePassword').on('click', function() {
-                togglePasswordVisibility('#password', this);
-            });
+            if(btn.prop('disabled')) return;
 
-            $('#toggleConfirmPassword').on('click', function() {
-                togglePasswordVisibility('#password_confirmation', this);
-            });
+            btn.prop('disabled', true).css('opacity', '0.7');
+            txt.hide(); spin.show();
 
-            $('#registerForm').on('submit', function(e) {
-                e.preventDefault();
-                
-                const password = $('#password').val();
-                const confirmPassword = $('#password_confirmation').val();
-
-                if (password !== confirmPassword) {
-                    notify('error', 'Passwords do not match.');
-                    return;
-                }
-
-                const form = $(this);
-                const btn = form.find('.btn-register');
-                const btnText = btn.find('.btn-text');
-                const spinner = btn.find('.spinner');
-
-                btn.prop('disabled', true);
-                btnText.hide();
-                spinner.show();
-
-                const formData = {};
-                form.serializeArray().forEach(item => formData[item.name] = item.value);
-
-                $.ajax({
-                    url: form.attr('action'),
-                    method: form.attr('method'),
-                    contentType: 'application/json',
-                    data: JSON.stringify(formData),
-                    success: function(response) {
-                        onRequestResponse(response);
-                    },
-                    error: function(xhr) {
-                        let msg = 'Registration failed. Please try again.';
-                        if (xhr.responseJSON) {
-                            msg = xhr.responseJSON.msg || xhr.responseJSON.message || msg;
-                        }
-                        notify('error', msg);
-                    },
-                    complete: function() {
-                        btn.prop('disabled', false);
-                        btnText.show();
-                        spinner.hide();
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                data: JSON.stringify(Object.fromEntries(new FormData(this))),
+                contentType: 'application/json',
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                success: function(res) {
+                    if(res.status === 'success') {
+                        showToast('Account Created!');
+                        setTimeout(() => window.location.href = "/dashboard", 1000);
+                    } else {
+                        showToast(res.msg || 'Error', true);
+                        reset();
                     }
-                });
+                },
+                error: function(e) {
+                    showToast(e.responseJSON?.msg || 'Registration failed', true);
+                    reset();
+                }
             });
+
+            function reset() {
+                btn.prop('disabled', false).css('opacity', '1');
+                txt.show(); spin.hide();
+            }
         });
     </script>
 </body>

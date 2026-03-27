@@ -1,350 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, minimal-ui, viewport-fit=cover">
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.png">
-    <title>My Orders - MyGram</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover">
+    <title>My Investments - FortuneFlow</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+    
     <style>
         :root {
-            --primary: #ee667f;
-            --primary-dark: #d64d66;
-            --accent: #ff8fa3;
-            --bg-body: #f0f2f5;
-            --surface: #ffffff;
-            --text-main: #2d3436;
-            --text-sub: #636e72;
-            --glass: rgba(255, 255, 255, 0.9);
-            --shadow-sm: 0 4px 6px rgba(0,0,0,0.02);
-            --shadow-md: 0 10px 20px rgba(238, 102, 127, 0.15);
-            --radius-lg: 24px;
-            --radius-md: 16px;
+            --ios-bg: #0A0E1A;
+            --ios-blue: #F1C40F;
+            --ios-green: #27AE60;
+            --ios-gray: #A0AEC0;
+            --card-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-body); color: var(--text-main); padding-bottom: 100px; }
-        
-        .main-wrapper { max-width: 480px; margin: 0 auto; background: var(--bg-body); min-height: 100vh; position: relative; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--ios-bg);
+            color: #fff;
+            padding-bottom: 100px;
+            padding-top: max(20px, env(safe-area-inset-top));
+        }
 
         /* Header */
-        .hero-header {
-            background: linear-gradient(135deg, #df506cff 0%, #fff 100%);
-            padding: 20px 20px 40px;
-            border-radius: 0 0 40px 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-            margin-bottom: -30px;
-        }
-        .top-nav { display: flex; justify-content: center; align-items: center; margin-bottom: 20px; }
-        .logo-img { height: 32px; width: auto; }
-        .page-title { text-align: center; font-size: 20px; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }
-
-        /* Content */
-        .section-container { padding: 0 20px; position: relative; z-index: 10; }
-
-        /* Tabs */
-        .custom-tabs { background: white; padding: 6px; border-radius: 50px; display: flex; margin-bottom: 20px; box-shadow: var(--shadow-sm); }
-        .tab-btn { flex: 1; padding: 10px; border-radius: 40px; text-align: center; font-size: 14px; font-weight: 600; color: var(--text-sub); cursor: pointer; transition: all 0.3s; }
-        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(238, 102, 127, 0.3); }
-
-        /* Plan Cards */
-        .plan-card {
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            gap: 15px;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(0,0,0,0.03);
-        }
-        .plan-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--primary); }
-        .plan-img { width: 90px; height: 90px; border-radius: var(--radius-md); object-fit: cover; background: #eee; }
-        .plan-info { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .plan-name { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
-        .plan-price { font-size: 14px; color: var(--text-sub); }
-        
-        .plan-stats { display: flex; gap: 15px; margin-top: 8px; background: #f8f9fa; padding: 8px; border-radius: 10px; }
-        .stat-item { flex: 1; }
-        .stat-label { font-size: 10px; color: var(--text-sub); text-transform: uppercase; }
-        .stat-value { font-size: 13px; font-weight: 700; color: var(--primary); }
-
-        .action-area { margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .validity-badge { font-size: 12px; font-weight: 600; color: var(--text-main); background: #f0f2f5; padding: 4px 10px; border-radius: 8px; }
-        
-        .claim-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(238, 102, 127, 0.3);
-            text-decoration: none;
-            display: inline-block;
-        }
-        .claim-btn:disabled { background: #e0e0e0; color: #aaa; box-shadow: none; cursor: not-allowed; }
-        .countdown-btn { background: #fff0f3; color: var(--primary); border: 1px solid var(--primary); box-shadow: none; }
-
-        /* Floating Navigation */
-        .floating-nav {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 400px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
+        .page-header {
             padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            z-index: 1000;
-            border: 1px solid rgba(255,255,255,0.5);
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 20px;
         }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: #b2bec3;
-            font-size: 10px;
-            font-weight: 500;
-            gap: 4px;
-            transition: all 0.3s;
-            width: 50px;
+
+        /* List */
+        .invest-list { padding: 0 20px; display: flex; flex-direction: column; gap: 15px; }
+
+        .invest-card {
+            background: #161B2D;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            position: relative;
         }
-        .nav-item i { font-size: 20px; transition: transform 0.2s; }
-        .nav-item.active { color: var(--primary); }
-        .nav-item.active i { transform: translateY(-2px); }
+
+        .ic-head { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; }
+        .ic-img { width: 50px; height: 50px; border-radius: 12px; object-fit: cover; }
+        .ic-info { flex: 1; }
+        .ic-name { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+        .ic-cost { font-size: 13px; color: var(--ios-gray); }
+
+        .ic-stats {
+            display: flex; gap: 15px; margin-bottom: 20px;
+            background: #2D3748; padding: 12px; border-radius: 12px;
+        }
+        .stat-item { flex: 1; }
+        .stat-lbl { font-size: 11px; color: var(--ios-gray); text-transform: uppercase; font-weight: 600; margin-bottom: 4px; }
+        .stat-val { font-size: 15px; font-weight: 600; color: #fff; }
+        .stat-val.green { color: var(--ios-green); }
+
+        .btn-claim {
+            width: 100%;
+            background: var(--ios-blue);
+            color: #000;
+            border: none;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-claim:active { opacity: 0.8; }
+
+        .btn-cd {
+            width: 100%;
+            background: #2D3748;
+            color: #fff;
+            border: none;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: default;
+        }
         
-        .nav-center {
-            width: 56px;
-            height: 56px;
-            background: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: -30px;
-            box-shadow: 0 8px 20px rgba(238, 102, 127, 0.4);
-            border: 4px solid var(--bg-body);
-            color: white;
-            font-size: 22px;
-            text-decoration: none;
+        .btn-done {
+            width: 100%;
+            background: transparent;
+            color: var(--ios-gray);
+            border: 1px solid #E5E5EA;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: default;
         }
+
+        .empty-state { text-align: center; padding: 40px; color: var(--ios-gray); }
+
+        /* Tab Bar */
+        .tab-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: rgba(16,20,35,0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 0.5px solid rgba(255,255,255,0.1);
+            display: flex; justify-content: space-around;
+            padding-top: 10px;
+            padding-bottom: max(10px, env(safe-area-inset-bottom));
+            z-index: 100;
+        }
+        .tab-item {
+            text-decoration: none;
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            color: #999;
+            flex: 1;
+        }
+        .tab-item i { font-size: 22px; }
+        .tab-item span { font-size: 10px; font-weight: 600; }
+        .tab-item.active { color: var(--ios-blue); }
+
+        /* Toast */
+        .toast {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: #333; color: white; padding: 12px 24px; border-radius: 30px;
+            font-size: 14px; font-weight: 600; z-index: 2000;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.3s;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(10px); }
     </style>
 </head>
-
 <body>
-    <div class="main-wrapper">
-        
-        <!-- Header -->
-        <div class="hero-header">
-            <!-- <div class="top-nav">
-                <img src="/logo.png" alt="MyGram" class="logo-img">
-            </div> -->
-            <h1 class="page-title">My Orders</h1>
-        </div>
 
-        <?php
-            $packageOne = \App\Models\Package::where('Status', '!=','inactive')->where('tab','vip')->get();
-            $packagetwo = \App\Models\Package::where('Status', '!=','inactive')->where('tab', 'fixed')->get();
-        ?>  
+    <div class="page-header">My Investments</div>
 
-        <!-- Content -->
-        <div class="section-container">
-            
-            <div class="custom-tabs">
-                <div class="tab-btn active" data-tab="daily">Daily Plans</div>
-                <div class="tab-btn" data-tab="welfare">Welfare Plans</div>
-            </div>
+    <?php
+        $purchases = \App\Models\Purchase::where('user_id', auth()->id())->where('status', 'active')->latest()->get();
+    ?>  
 
-            <div id="daily" class="tab-content active">
-                @if($packageOne->count() > 0)
-                    @foreach($packageOne as $element)
-                        <?php
-                            $myVip = \App\Models\Purchase::where('user_id', auth()->id())->where('package_id', $element->id)->where('status', 'active')->first();
-                        ?>  
-                        @if($myVip)
-                        <div class="plan-card">
-                            <img src="{{ asset('assets/images/favion.png') }}" alt="{{ $element->name }}" class="plan-img">
-                            <div class="plan-info">
-                                <div>
-                                    <h3 class="plan-name">{{ $element->name }}</h3>
-                                    <p class="plan-price">Price: {{ price($element->price) }}</p>
-                                </div>
-                                <div class="plan-stats">
-                                    <div class="stat-item">
-                                        <div class="stat-label">Daily</div>
-                                        <div class="stat-value">{{ price($element->daily_limit) }}</div>
-                                    </div>
-                                    <div class="stat-item">
-                                        <div class="stat-label">Total</div>
-                                        <div class="stat-value">{{ price($element->daily_limit * $element->validity) }}</div>
-                                    </div>
-                                </div>
-                                <div class="action-area">
-                                    <span class="validity-badge">{{ $element->validity }} Days</span>
-                                    
-                                    @php
-                                        $last_claim = \App\Models\UserLedger::where(['user_id' => auth()->id(), 'reason' => 'daily_claim_'.$element->id])->latest()->first();
-                                        $lastPurchaseDate = $last_claim->created_at ?? $myVip->created_at; 
-                                        $diffInHours = $lastPurchaseDate->diffInHours(now());
-                                    @endphp
-
-                                    <button class="claim-btn countdown-btn" id="countdown-{{ $element->id }}" style="display: none;">00h 00m 00s</button>
-                                    <button class="claim-btn" onclick='window.location.href="/my/vip?vip_id={{$element->id}}"' id="claim-{{ $element->id }}" style="display: none;">Claim</button>
-                                    <button class="claim-btn" id="done-{{ $element->id }}" style="display: none; background: #ccc;" disabled>Done</button>
-                                </div>
+    <div class="invest-list">
+        @if($purchases->count() > 0)
+            @foreach($purchases as $purchase)
+                @php $plan = $purchase->package; @endphp
+                @if($plan)
+                    <div class="invest-card">
+                        <div class="ic-head">
+                            <img src="{{ asset('assets/images/vip_cartoon.png') }}" class="ic-img">
+                            <div class="ic-info">
+                                <div class="ic-name">{{ $plan->name }}</div>
+                                <div class="ic-cost">Invested: {{ price($purchase->amount ?? $plan->price) }}</div>
                             </div>
+                            <div style="font-size:12px; font-weight:600; background:#E5E5EA; color:#555; padding:4px 8px; border-radius:6px;">
+                                {{ $plan->validity }} Days
+                            </div>
+                        </div>
+
+                        <div class="ic-stats">
+                            <div class="stat-item">
+                                <div class="stat-lbl">Daily ROI</div>
+                                <div class="stat-val green">{{ price($purchase->daily_limit ?? $plan->daily_limit) }}</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-lbl">Total ROI</div>
+                                @php
+                                    $daily = (float)($purchase->daily_limit ?? $plan->daily_limit ?? 0);
+                                    $valid = (int)($plan->validity ?? 0);
+                                    $totalROI = $daily * $valid;
+                                @endphp
+                                <div class="stat-val">{{ price($totalROI) }}</div>
+                            </div>
+                        </div>
+
+                        <!-- Action Logic -->
+                        @php
+                            $reason = 'daily_claim_purchase_' . $purchase->id;
+                            $last_claim = \App\Models\UserLedger::where(['user_id' => auth()->id(), 'reason' => $reason])->latest()->first();
+                            $lastActionDate = $last_claim->created_at ?? $purchase->created_at; 
+                            $claimedToday = \App\Models\UserLedger::where(['user_id' => auth()->id(), 'reason' => $reason])->whereDate('created_at', today())->exists();
+                        @endphp
+
+                        <div id="wrapper-{{ $purchase->id }}">
+                            <button class="btn-cd" id="cd-{{ $purchase->id }}" style="display:none">00:00:00</button>
+                            <button class="btn-claim" id="claim-{{ $purchase->id }}" style="display:none" onclick="window.location.href='/my/vip?purchase_id={{$purchase->id}}'">Receive Income</button>
+                            <button class="btn-done" id="done-{{ $purchase->id }}" style="display:none">Collected Today</button>
                         </div>
 
                         <script>
                             (function() {
-                                const lastPurchaseDateStr = @json($lastPurchaseDate);
-                                const diffInHours = @json($diffInHours);
-                                const alreadyClaimedToday = {{ App\Models\UserLedger::where(['user_id' => auth()->id(), 'reason' => 'daily_claim_'.$element->id])->whereDate('created_at', today())->exists() ? 'true' : 'false' }};
+                                const lastTime = new Date(@json($lastActionDate)).getTime();
+                                const claimedToday = @json($claimedToday);
+                                const now = new Date().getTime();
+                                const nextClaim = lastTime + (24 * 60 * 60 * 1000);
+                                
+                                const btnCd = document.getElementById("cd-{{ $purchase->id }}");
+                                const btnClaim = document.getElementById("claim-{{ $purchase->id }}");
+                                const btnDone = document.getElementById("done-{{ $purchase->id }}");
 
-                                const countdownBtn = document.getElementById("countdown-{{ $element->id }}");
-                                const claimBtn = document.getElementById("claim-{{ $element->id }}");
-                                const doneBtn = document.getElementById("done-{{ $element->id }}");
-
-                                if (diffInHours < 24) {
-                                    countdownBtn.style.display = 'inline-block';
-                                    let purchaseDate = new Date(lastPurchaseDateStr);
-                                    let endTime = new Date(purchaseDate.getTime() + 24 * 60 * 60 * 1000);
-            
-                                    function updateCountdown() {
-                                        let now = new Date().getTime();
-                                        let distance = endTime - now;
-            
-                                        if (distance < 0) {
-                                            clearInterval(countdownInterval);
-                                            countdownBtn.style.display = 'none';
-                                            claimBtn.style.display = 'inline-block';
+                                if (now < nextClaim) {
+                                    // Priority 1: Countdown if 24 hours haven't passed
+                                    btnCd.style.display = 'block';
+                                    function update() {
+                                        const curr = new Date().getTime();
+                                        const diff = nextClaim - curr;
+                                        if (diff <= 0) {
+                                            btnCd.style.display = 'none';
+                                            // Once timer is up, check if we can claim or if calendar day blocks us
+                                            if (claimedToday) {
+                                                btnDone.style.display = 'block';
+                                            } else {
+                                                btnClaim.style.display = 'block';
+                                            }
                                             return;
                                         }
-            
-                                        let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                                        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                                        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            
-                                        countdownBtn.innerText = `${hours}h ${minutes}m ${seconds}s`;
+                                        const h = Math.floor((diff % (86400000)) / 3600000);
+                                        const m = Math.floor((diff % 3600000) / 60000);
+                                        const s = Math.floor((diff % 60000) / 1000);
+                                        btnCd.innerText = `Next claim: ${h}h ${m}m ${s}s`;
+                                        setTimeout(update, 1000);
                                     }
-                                    let countdownInterval = setInterval(updateCountdown, 1000);
-                                    updateCountdown();
+                                    update();
+                                } else if (claimedToday) {
+                                    // Priority 2: 24 hours passed, but already claimed today (calendar day restriction)
+                                    btnDone.style.display = 'block';
                                 } else {
-                                    if(alreadyClaimedToday) {
-                                        doneBtn.style.display = 'inline-block';
-                                    } else {
-                                        claimBtn.style.display = 'inline-block';
-                                    }
+                                    // Priority 3: Can claim
+                                    btnClaim.style.display = 'block';
                                 }
                             })();
                         </script>
-                        @endif
-                    @endforeach
-                @else
-                    <div style="text-align: center; padding: 40px; color: var(--text-sub);">
-                        <i class="fa-regular fa-folder-open" style="font-size: 30px; margin-bottom: 10px; opacity: 0.5;"></i>
-                        <p>No active daily plans</p>
                     </div>
                 @endif
-            </div>
-
-            <div id="welfare" class="tab-content" style="display: none;">
-                @if($packagetwo->count() > 0)
-                    @foreach($packagetwo as $element1)
-                        <?php
-                            $myVip = \App\Models\Purchase::where('user_id', auth()->id())->where('package_id', $element1->id)->where('status', 'active')->first();
-                        ?>  
-                        @if($myVip)
-                        <div class="plan-card">
-                            <img src="{{ asset('assets/images/favion.png') }}" alt="{{ $element1->name }}" class="plan-img">
-                            <div class="plan-info">
-                                <div>
-                                    <h3 class="plan-name">{{ $element1->name }}</h3>
-                                    <p class="plan-price">Price: {{ price($element1->price) }}</p>
-                                </div>
-                                <div class="plan-stats">
-                                    <div class="stat-item">
-                                        <div class="stat-label">Daily</div>
-                                        <div class="stat-value">{{ price($element1->daily_limit) }}</div>
-                                    </div>
-                                    <div class="stat-item">
-                                        <div class="stat-label">Total</div>
-                                        <div class="stat-value">{{ price($element1->daily_limit * $element1->validity) }}</div>
-                                    </div>
-                                </div>
-                                <div class="action-area">
-                                    <span class="validity-badge">{{ $element1->validity }} Days</span>
-                                    @if($myVip->created_at->addDays($element1->validity) <= now())
-                                        <button class="claim-btn" onclick='window.location.href="/my/vip?vip_id={{$element1->id}}"'> Claim </button>
-                                    @else
-                                        <button class="claim-btn" disabled style="background: #e0e0e0; color: #888;">Running</button>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        @endif
-                    @endforeach
-                @else
-                    <div style="text-align: center; padding: 40px; color: var(--text-sub);">
-                        <i class="fa-regular fa-folder-open" style="font-size: 30px; margin-bottom: 10px; opacity: 0.5;"></i>
-                        <p>No active welfare plans</p>
-                    </div>
-                @endif
-            </div>
-        </div>
+            @endforeach
+        @else
+            <div class="empty-state">No active investments found.</div>
+        @endif
     </div>
 
-    <!-- Floating Navigation -->
-    <div class="floating-nav">
-        <a href="/" class="nav-item">
-            <i class="fa-solid fa-house-chimney"></i>
-            <span>Home</span>
-        </a>
-        <a href="/invite" class="nav-item">
-            <i class="fa-solid fa-users-line"></i>
-            <span>Team</span>
-        </a>
-        <a href="/my/vip" class="nav-center">
-            <i class="fa-solid fa-layer-group"></i>
-        </a>
-        <a href="/history" class="nav-item">
-            <i class="fa-solid fa-clock-rotate-left"></i>
-            <span>History</span>
-        </a>
-        <a href="/mine" class="nav-item">
-            <i class="fa-regular fa-user"></i>
-            <span>Profile</span>
-        </a>
-    </div>
+    <!-- Tab Bar -->
+    <nav class="tab-bar">
+        <a href="/" class="tab-item"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="/my/vip" class="tab-item active"><i class="fas fa-layer-group"></i><span>Plans</span></a>
+        <a href="/my-team" class="tab-item"><i class="fas fa-users"></i><span>Team</span></a>
+        <a href="/mine" class="tab-item"><i class="far fa-user"></i><span>Profile</span></a>
+    </nav>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('.tab-btn').on('click', function() {
-                $('.tab-btn').removeClass('active');
-                $('.tab-content').hide();
-                
-                $(this).addClass('active');
-                const tabId = $(this).data('tab');
-                $('#' + tabId).fadeIn(300);
-            });
-        });
-    </script>
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+    @if(session('success')) 
+        <script>
+            const t = document.getElementById('toast');
+            t.innerText = "{{ session('success') }}";
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        </script>
+    @endif
+
 </body>
 </html>

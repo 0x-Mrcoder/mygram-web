@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            // Change column from INTEGER to STRING to prevent overflow
-            $table->string('virtual_account_number', 255)->change();
+            // optimized: column is already string from creation
+            // $table->string('virtual_account_number', 255)->change();
         });
     }
 
@@ -27,8 +27,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            // Reverting might be risky if data contains non-integers, but defining inverse
-            $table->integer('virtual_account_number')->change();
+            // $table->integer('virtual_account_number')->change();
         });
     }
 };

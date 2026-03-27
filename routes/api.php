@@ -4,6 +4,7 @@ use App\Http\Controllers\user\OnepayController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PayrantWebhookController;
+use App\Http\Controllers\Api\VTStackWebhookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/payrant/webhook', [PayrantWebhookController::class, 'handle']);
+Route::post('/vtstack/webhook', [VTStackWebhookController::class, 'handle']);
 
 Route::get('number/{type}', [OnepayController::class, 'return_number']);
 Route::get('deposit/submit', [OnepayController::class, 'depositSubmit']);

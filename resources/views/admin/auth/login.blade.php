@@ -2,70 +2,137 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Admin|{{env('APP_NAME')}}</title>
-    <link rel="stylesheet" href="{{ asset('admin/app-assets/login.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Access | {{env('APP_NAME')}}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body {
+            background: #0f1c2e;
+            background-image: radial-gradient(circle at top right, #1e3a8a 0%, transparent 40%),
+                              radial-gradient(circle at bottom left, #0f1c2e 0%, transparent 40%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+        .login-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .login-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .login-header p {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #cbd5e1;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
+        .btn-submit:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-<div class="login-root">
-    <div class="box-root flex-flex flex-direction--column" style="min-height: 100vh;flex-grow: 1;">
-        <div class="loginbackground box-background--white padding-top--64">
-            <div class="loginbackground-gridContainer">
-                <div class="box-root flex-flex" style="grid-area: top / start / 8 / end;">
-                    <div class="box-root" style="background-image: linear-gradient(white 0%, rgb(247, 250, 252) 33%); flex-grow: 1;">
-                    </div>
-                </div>
-                <div class="box-root flex-flex" style="grid-area: 4 / 2 / auto / 5;">
-                    <div class="box-root box-divider--light-all-2 animationLeftRight tans3s" style="flex-grow: 1;"></div>
-                </div>
-                <div class="box-root flex-flex" style="grid-area: 6 / start / auto / 2;">
-                    <div class="box-root box-background--blue800" style="flex-grow: 1;"></div>
-                </div>
-                <div class="box-root flex-flex" style="grid-area: 7 / start / auto / 4;">
-                    <div class="box-root box-background--blue animationLeftRight" style="flex-grow: 1;"></div>
-                </div>
-                <div class="box-root flex-flex" style="grid-area: 8 / 4 / auto / 6;">
-                    <div class="box-root box-background--gray100 animationLeftRight tans3s" style="flex-grow: 1;"></div>
-                </div>
-                <div class="box-root flex-flex" style="grid-area: 2 / 15 / auto / end;">
-                    <div class="box-root box-background--cyan200 animationRightLeft tans4s" style="flex-grow: 1;"></div>
-                </div>
-                <div class="box-root flex-flex" style="grid-area: 3 / 14 / auto / end;">
-                    <div class="box-root box-background--blue animationRightLeft" style="flex-grow: 1;"></div>
-                </div>
-                <div class="box-root flex-flex" style="grid-area: 4 / 17 / auto / 20;">
-                    <div class="box-root box-background--gray100 animationRightLeft tans4s" style="flex-grow: 1;"></div>
-                </div>
-                <div class="box-root flex-flex" style="grid-area: 5 / 14 / auto / 17;">
-                    <div class="box-root box-divider--light-all-2 animationRightLeft tans3s" style="flex-grow: 1;"></div>
-                </div>
-            </div>
-        </div>
-        <div class="box-root padding-top--24 flex-flex flex-direction--column" style="flex-grow: 1; z-index: 9;">
-            <div class="box-root padding-top--48 padding-bottom--24 flex-flex flex-justifyContent--center">
-                <h1><a href="http://blog.stackfindover.com/" rel="dofollow">ADMIN-{{env('APP_NAME')}}</a></h1>
-            </div>
-            <div class="formbg-outer">
-                <div class="formbg">
-                    <div class="formbg-inner padding-horizontal--48">
-                        <span class="padding-bottom--15">Sign in to Admin Panel</span>
-                        <form id="stripe-login" method="POST" action="{{route('admin.login-submit')}}"> @csrf
-                            <div class="field padding-bottom--24">
-                                <label for="email">Email</label>
-                                <input type="email" name="email" required>
-                            </div>
-                            <div class="field padding-bottom--24">
-                                <label for="password">Password</label>
-                                <input type="password" name="password" required>
-                            </div>
-                            <div class="field padding-bottom--24">
-                                <input type="submit" name="submit" value="Continue">
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+<div class="login-card">
+    <div class="login-header">
+        <h1>Brother Panel</h1>
+        <p>Sign in to continue</p>
     </div>
+
+    @if(session('error'))
+        <div class="alert">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @foreach($errors->all() as $error)
+        <div class="alert">
+            {{ $error }}
+        </div>
+    @endforeach
+
+    <form method="POST" action="{{route('admin.login-submit')}}">
+        @csrf
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" name="email" id="email" class="form-control" value="my@gmail.com" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" class="form-control" value="12345678" required>
+        </div>
+        
+        <button type="submit" class="btn-submit">Secure Login</button>
+    </form>
 </div>
+
 </body>
 </html>

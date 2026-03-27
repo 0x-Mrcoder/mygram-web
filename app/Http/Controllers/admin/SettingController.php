@@ -29,6 +29,11 @@ class SettingController extends Controller
         $model->registration_bonus = $request->registration_bonus;
         $model->refer_commission = $request->refer_commission;
         $model->refer_limit = $request->refer_limit;
+        
+        // Multi-level commission percentages
+        $model->level1_commission_percent = $request->level1_commission_percent ?? 8;
+        $model->level2_commission_percent = $request->level2_commission_percent ?? 2;
+        $model->level3_commission_percent = $request->level3_commission_percent ?? 1;
 
         $model->minimum_withdraw = $request->minimum_withdraw;
         $model->maximum_withdraw = $request->maximum_withdraw;
@@ -40,8 +45,17 @@ class SettingController extends Controller
         $model->daily_sign_amount = $request->daily_sign_amount;
         $model->withdraw_status = $request->withdraw_status;
         $model->payment_mode = $request->payment_mode ?? 'manual';
+        $model->virtual_gateway = $request->virtual_gateway ?? 'payrant';
+        $model->vtstack_api_key = $request->vtstack_api_key;
+        $model->vtstack_webhook_secret = $request->vtstack_webhook_secret;
+        
+        // Event Settings
+        $model->event_active = $request->has('event_active') ? 1 : 0;
+        $model->event_title = $request->event_title;
+        $model->event_end_time = $request->event_end_time ? \Carbon\Carbon::parse($request->event_end_time) : null;
+        $model->event_discount_percent = $request->event_discount_percent ?? 0;
 
-        $model->update();
+        $model->save();
         return redirect()->route($this->route.'.index')->with('success', 'Settings Updated Successfully.');
     }
 }

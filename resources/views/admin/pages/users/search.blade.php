@@ -112,6 +112,14 @@
                                                data-toggle="tooltip"
                                                title='@if($user->status == 'active') User status inactive after click @else User status active after click @endif'>
                                                 <i class="bx @if($user->status == 'active') bx-up-arrow @else bx-down-arrow @endif"></i></a>
+
+                                            <a href="{{route('admin.customer.withdraw_status', $user->id)}}"
+                                               class="btn @if($user->is_withdraw_active) btn-secondary @else btn-warning @endif"
+                                               style="padding: 3px 7px;font-size: 20px"
+                                               data-toggle="tooltip"
+                                               title='@if($user->is_withdraw_active) Block Withdrawal @else Unblock Withdrawal @endif'>
+                                                <i class="bx @if($user->is_withdraw_active) bx-block @else bx-check-circle @endif"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                     <tr>

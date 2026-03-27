@@ -43,6 +43,7 @@ class PaymentMethodController extends Controller
         $model->photo = $path ?? $model->photo;
         $model->name = $request->name;
         $model->address = $request->address;
+        $model->account_name = $request->account_name;
 
         $model->save();
         return redirect()->route($this->route.'.index')->with('success', $request->id ? 'Payment method Updated Successful.' : 'Package Created Successful.');

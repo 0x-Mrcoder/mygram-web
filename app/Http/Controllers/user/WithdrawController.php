@@ -25,7 +25,8 @@ class WithdrawController extends Controller
         {
             return redirect()->to('/add/card');
         }
-        return view('app.main.withdraw.index');
+        $setting = \App\Models\Setting::first();
+        return view('app.main.withdraw.index', compact('setting'));
     }
 
     public function usdt_withdraw()
@@ -50,7 +51,11 @@ class WithdrawController extends Controller
         }
 
         if (setting('withdraw_status') == 'inactive'){
-            return back()->with('success', "Opps We cannot accept your withdrawal at this time");
+            return back()->with('error', "Opps We cannot accept your withdrawal at this time");
+        }
+
+        if (!Auth::user()->is_withdraw_active) {
+            return back()->with('error', "Your withdrawal account has been suspended. Please contact support.");
         }
 
         // ✅ এই অংশটি সরানো হয়েছে:
@@ -108,71 +113,73 @@ class WithdrawController extends Controller
                         $ledger->date = date('d-m-Y H:i');
                         $ledger->save();
 
-                        // Automate Withdrawal with Payrant
-                        try {
-                            Log::info('Initiating Payrant Transfer', ['user_id' => $user->id]);
-                            
-                            $payrant = new Payrant();
-                            $transferData = [
-                                'bank_code' => Auth::user()->gateway_method,
-                                'account_number' => Auth::user()->gateway_number,
-                                'account_name' => Auth::user()->holder_name,
-                                'amount' => $request->amount - $charge,
-                                'description' => "Withdrawal for " . Auth::user()->name,
-                                'reference' => $withdrawal->id, // Send Withdrawal ID as reference
-                            ];
-
-                            Log::info('Payrant Transfer Data', $transferData);
-
-                            $response = $payrant->transfer($transferData);
-                            
-                            Log::info('Payrant Transfer Response', ['response' => $response]);
-
-                            if (isset($response['status']) && $response['status'] == 'success') {
-                                // Transfer initiated successfully
-                                // Update status to approved immediately as per user request
-                                $withdrawal->status = 'approved';
-                                $withdrawal->save();
+                        // Automate Withdrawal with Payrant if not manual
+                        if (setting('payment_mode') != 'manual') {
+                            try {
+                                Log::info('Initiating Payrant Transfer', ['user_id' => $user->id]);
                                 
-                                // Update Ledger status
-                                $ledger->status = 'approved';
-                                $ledger->perticulation = 'Withdrawal approved and processed via Payrant.';
-                                $ledger->save();
+                                $payrant = new Payrant();
+                                $transferData = [
+                                    'bank_code' => Auth::user()->gateway_method,
+                                    'account_number' => Auth::user()->gateway_number,
+                                    'account_name' => Auth::user()->holder_name,
+                                    'amount' => $request->amount - $charge,
+                                    'description' => "Withdrawal for " . Auth::user()->name,
+                                    'reference' => $withdrawal->id . '_' . uniqid(), // Send unique reference
+                                ];
+
+                                Log::info('Payrant Transfer Data', $transferData);
+
+                                $response = $payrant->transfer($transferData);
                                 
-                                Log::info('Withdrawal Approved (Immediate)');
-                                return back()->with('success', 'Withdrawal successful. Funds transferred.');
-                            } else {
-                                // Transfer failed to initiate - Refund User
-                                Log::error('Payrant Transfer Failed', ['response' => $response]);
+                                Log::info('Payrant Transfer Response', ['response' => $response]);
+
+                                if (isset($response['status']) && $response['status'] == 'success') {
+                                    // Transfer initiated successfully
+                                    $withdrawal->status = 'approved';
+                                    $withdrawal->save();
+                                    
+                                    // Update Ledger status
+                                    $ledger->status = 'approved';
+                                    $ledger->perticulation = 'Withdrawal approved and processed via Payrant.';
+                                    $ledger->save();
+                                    
+                                    Log::info('Withdrawal Approved (Immediate)');
+                                    return back()->with('success', 'Withdrawal successful. Funds transferred.');
+                                } else {
+                                    // Transfer failed to initiate - Refund User
+                                    Log::error('Payrant Transfer Failed', ['response' => $response]);
+                                    
+                                    User::where('id', $user->id)->increment('balance', $request->amount);
+                                    
+                                    $withdrawal->status = 'rejected';
+                                    $withdrawal->save();
+
+                                    $ledger->status = 'rejected';
+                                    $ledger->perticulation = 'Withdrawal failed: ' . ($response['message'] ?? 'Payment gateway error');
+                                    $ledger->save();
+
+                                    return back()->with('error', 'Withdrawal failed: ' . ($response['message'] ?? 'Payment gateway error'));
+                                }
+                            } catch (\Exception $e) {
+                                // Exception occurred - Refund User
+                                Log::error('Payrant Transfer Exception', ['error' => $e->getMessage()]);
                                 
                                 User::where('id', $user->id)->increment('balance', $request->amount);
-                                
+                                    
                                 $withdrawal->status = 'rejected';
                                 $withdrawal->save();
 
                                 $ledger->status = 'rejected';
-                                $ledger->perticulation = 'Withdrawal failed: ' . ($response['message'] ?? 'Payment gateway error');
+                                $ledger->perticulation = 'Withdrawal failed: ' . $e->getMessage();
                                 $ledger->save();
 
-                                return back()->with('error', 'Withdrawal failed: ' . ($response['message'] ?? 'Payment gateway error'));
+                                return back()->with('error', 'Withdrawal failed. Please try again later.');
                             }
-                        } catch (\Exception $e) {
-                            // Exception occurred - Refund User
-                            Log::error('Payrant Transfer Exception', ['error' => $e->getMessage()]);
-                            
-                            User::where('id', $user->id)->increment('balance', $request->amount);
-                                
-                            $withdrawal->status = 'rejected';
-                            $withdrawal->save();
-
-                            $ledger->status = 'rejected';
-                            $ledger->perticulation = 'Withdrawal failed: ' . $e->getMessage();
-                            $ledger->save();
-
-                            return back()->with('error', 'Withdrawal failed. Please try again later.');
                         }
+                        
+                        return back()->with('success', 'Withdrawal request submitted successfully. Please wait for admin approval.');
                     }
-                   return back()->with('success', 'Withdrawal successful.');
                 } else {
                     return back()->with('error', 'Maximum Withdraw ' . price($maximum_withdraw));
                 }

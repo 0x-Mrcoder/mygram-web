@@ -226,10 +226,20 @@
         </div>
     </div>
 
+    </div>
+
      <?php
         use \App\Models\Package;
+        use \App\Models\Setting;
+        
+        $setting = Setting::first();
         $packageOne = Package::where('Status', '!=','inactive')->where('tab','vip')->get();
         $packagetwo = Package::where('Status', '!=','inactive')->where('tab', 'fixed')->get();
+
+        // Event Logic
+        $eventEndTime = \Carbon\Carbon::parse($setting->event_end_time);
+        $eventActive = $setting->event_active && $eventEndTime->isFuture();
+        $eventEndTimeTimestamp = $eventActive ? $eventEndTime->timestamp * 1000 : 0;
      ?>  
         
     <div class="container">
@@ -240,9 +250,24 @@
                 @foreach($packageOne as $key=>$element)
                     <?php
                         $myVip = auth()->check() ? \App\Models\Purchase::where('user_id', auth()->id())->where('package_id', $element->id)->where('status', 'active')->first() : null;
+                        
+                        // Discount Calculation
+                        $isDiscounted = $eventActive && $element->is_event_active;
+                        $price = $element->price;
+                        $displayPrice = $price;
+                        if($isDiscounted) {
+                            $discount = ($price * $setting->event_discount_percent) / 100;
+                            $displayPrice = $price - $discount;
+                        }
                     ?>  
-              <div class="product-card">
+              <div class="product-card" style="position: relative; overflow: visible;">
                 <span class="product-badge">{{ $element->validity }} Days</span>
+                @if($isDiscounted)
+                    <div style="position: absolute; top: 15px; left: 15px; background: #FF3B30; color: white; padding: 5px 10px; border-radius: 20px; font-weight: 800; font-size: 12px; z-index: 2; box-shadow: 0 4px 10px rgba(255, 59, 48, 0.3);">
+                        -{{ $setting->event_discount_percent }}% OFF
+                    </div>
+                @endif
+
                 <div class="product-image-container">
                   <img src="{{asset($element->photo)}}" class="product-image" alt="{{ $element->name }}">
                 </div>
@@ -259,9 +284,23 @@
                       <div class="stat-label">Total Income</div>
                     </div>
                   </div>
+
+                  @if($isDiscounted)
+                     <div class="event-timer-small" data-endtime="{{ $eventEndTimeTimestamp }}" style="font-size: 12px; color: #FF3B30; font-weight: 600; text-align: center; margin-bottom: 10px;">
+                        Ends in: <span class="t-d">0d</span> <span class="t-h">00h</span> <span class="t-m">00m</span> <span class="t-s">00s</span>
+                    </div>
+                  @endif
     
                   <div class="product-footer">
-                    <div class="product-price"><strong>Price:</strong> {{price($element->price)}}</div>
+                    <div class="product-price">
+                        <strong>Price:</strong> 
+                        @if($isDiscounted)
+                            <span style="text-decoration: line-through; color: #999; font-size: 14px;">{{ price($price) }}</span>
+                            <span style="color: #FF3B30; font-size: 20px;">{{ price($displayPrice) }}</span>
+                        @else
+                            {{price($price)}}
+                        @endif
+                    </div>
                    
                     @if($myVip)
                     <button class="invest-btn">Current</button>
@@ -289,9 +328,24 @@
                 @foreach($packagetwo as $key=>$element1)
                     <?php
                         $myVip = auth()->check() ? \App\Models\Purchase::where('user_id', auth()->id())->where('package_id', $element1->id)->where('status', 'active')->first() : null;
+                        
+                        // Discount Calculation
+                        $isDiscounted = $eventActive && $element1->is_event_active;
+                        $price = $element1->price;
+                        $displayPrice = $price;
+                        if($isDiscounted) {
+                            $discount = ($price * $setting->event_discount_percent) / 100;
+                            $displayPrice = $price - $discount;
+                        }
                     ?>  
-              <div class="product-card">
+              <div class="product-card" style="position: relative; overflow: visible;">
                 <span class="product-badge">{{ $element1->validity }} Days</span>
+                @if($isDiscounted)
+                    <div style="position: absolute; top: 15px; left: 15px; background: #FF3B30; color: white; padding: 5px 10px; border-radius: 20px; font-weight: 800; font-size: 12px; z-index: 2; box-shadow: 0 4px 10px rgba(255, 59, 48, 0.3);">
+                        -{{ $setting->event_discount_percent }}% OFF
+                    </div>
+                @endif
+                
                 <div class="product-image-container">
                   <img src="{{asset($element1->photo)}}" class="product-image" alt="{{ $element1->name }}">
                 </div>
@@ -308,9 +362,23 @@
                       <div class="stat-label">Total Income</div>
                     </div>
                   </div>
+
+                  @if($isDiscounted)
+                     <div class="event-timer-small" data-endtime="{{ $eventEndTimeTimestamp }}" style="font-size: 12px; color: #FF3B30; font-weight: 600; text-align: center; margin-bottom: 10px;">
+                        Ends in: <span class="t-d">0d</span> <span class="t-h">00h</span> <span class="t-m">00m</span> <span class="t-s">00s</span>
+                    </div>
+                  @endif
     
                   <div class="product-footer">
-                    <div class="product-price"><strong>Price:</strong> {{price($element1->price)}}</div>
+                    <div class="product-price">
+                        <strong>Price:</strong> 
+                        @if($isDiscounted)
+                            <span style="text-decoration: line-through; color: #999; font-size: 14px;">{{ price($price) }}</span>
+                            <span style="color: #FF3B30; font-size: 20px;">{{ price($displayPrice) }}</span>
+                        @else
+                            {{price($price)}}
+                        @endif
+                    </div>
                     @if($myVip)
                     <button class="invest-btn">Current</button>
                       @else
@@ -362,6 +430,41 @@
           document.getElementById(tabId).classList.add('active');
         });
       });
+
+      // Timer Logic
+      document.addEventListener('DOMContentLoaded', function() {
+        startTimers();
+      });
+
+      function startTimers() {
+            const timers = document.querySelectorAll('[data-endtime]');
+            if(timers.length === 0) return;
+
+            function update() {
+                const now = new Date().getTime();
+                
+                timers.forEach(timer => {
+                    const end = parseInt(timer.getAttribute('data-endtime'));
+                    const diff = end - now;
+
+                    if(diff <= 0) {
+                        timer.innerHTML = "Event Ended";
+                        return;
+                    }
+
+                    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+                    // Update small card timer
+                    timer.innerHTML = `Ends in: ${d}d ${h}h ${m}m ${s}s`;
+                });
+            }
+            
+            update();
+            setInterval(update, 1000);
+        }
     </script>
   </div>
 </body>

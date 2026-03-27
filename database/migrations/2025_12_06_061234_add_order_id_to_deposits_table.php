@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('deposits', function (Blueprint $table) {
-            $table->string('order_id')->nullable()->after('amount');
-        });
+        if (!Schema::hasColumn('deposits', 'order_id')) {
+            Schema::table('deposits', function (Blueprint $table) {
+                $table->string('order_id')->nullable()->after('amount');
+            });
+        }
     }
 
     /**

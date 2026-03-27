@@ -227,6 +227,27 @@
                                                 Note: This is filed is required
                                             </div>
                                         </div>
+                                    <div class="col-sm-6">
+                                        <label for="purchase_limit">Purchase Limit (Per User)</label>
+                                        <input type="number" class="form-control"
+                                               name="purchase_limit" id="purchase_limit"
+                                               placeholder="Enter limit (Empty = Unlimited)" value="{{$data ? $data->purchase_limit : ''}}">
+                                        <small class="text-muted">How many times a single user can buy this plan. Leave empty for unlimited.</small>
+                                    </div>
+
+                                    <div class="col-sm-6" style="display: flex; align-items: center; margin-top: 30px;">
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="is_locked" name="is_locked" value="1" @if($data && $data->is_locked) checked @endif>
+                                            <label class="custom-control-label" for="is_locked">Lock this Plan (Visible but not purchasable)</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6" style="display: flex; align-items: center; margin-top: 30px;">
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="is_event_active" name="is_event_active" value="1" @if($data && $data->is_event_active) checked @endif>
+                                            <label class="custom-control-label" for="is_event_active">Include in Event (Apply Discount)</label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

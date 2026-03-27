@@ -8,7 +8,10 @@
                         <h4 class="card-title">
                             <div class="d-flex justify-content-between">
                                 <div>Package Lists</div>
-                                <div><a href="{{route('admin.package.create')}}" class="btn btn-primary btn-sm"> <i class="bx bx-plus"></i> Add New Item </a> </div>
+                                <div>
+                                    <a href="{{route('admin.setting.index')}}" class="btn btn-info btn-sm mr-1"> <i class="bx bx-cog"></i> Payment Settings </a>
+                                    <a href="{{route('admin.package.create')}}" class="btn btn-primary btn-sm"> <i class="bx bx-plus"></i> Add New Item </a>
+                                </div>
                             </div>
                         </h4>
                     </div>
@@ -25,6 +28,7 @@
                                         <th>Photo</th>
                                         <th>Price</th>
                                         <th>Validity</th>
+                                        <th>Event</th>
                                         <th>Status</th>
                                         <th>Active</th>
                                     </tr>
@@ -41,6 +45,12 @@
                                             </td>
                                             <td>{{$row->price}}</td>
                                             <td>{{$row->validity}}Days</td>
+                                            <td>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input event-status" id="event_status_{{$row->id}}" data-id="{{$row->id}}" {{$row->is_event_active ? 'checked' : ''}}>
+                                                    <label class="custom-control-label" for="event_status_{{$row->id}}"></label>
+                                                </div>
+                                            </td>
                                             <td>{{$row->status}}</td>
                                             <td>
                                                 <a href="{{route('admin.package.create', $row->id)}}"
@@ -68,6 +78,31 @@
             </div>
         </div>
     </section>
+
+    <script>
+        $(document).ready(function(){
+            $(document).on('change', '.event-status', function() {
+                var status = $(this).prop('checked') == true ? 1 : 0;
+                var id = $(this).data('id');
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: "{{ route('admin.package.event_status') }}",
+                    data: {'status': status, 'id': id, '_token': "{{ csrf_token() }}"},
+                    success: function(data){
+                        if(data.status){
+                           toastr.success(data.msg);
+                        }else{
+                           toastr.error(data.msg);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        toastr.error("An error occurred: " + error);
+                    }
+                });
+            });
+        });
+    </script>
 @endsection
 
 

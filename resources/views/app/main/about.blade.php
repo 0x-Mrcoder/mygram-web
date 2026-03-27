@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, minimal-ui, viewport-fit=cover">
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.png">
-    <title>About Us - MyGram</title>
+    <title>About Us - FortuneFlow</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -169,7 +169,7 @@
         <!-- Content -->
         <div class="section-container">
             <div class="about-card">
-                <img src="/resources/views/app/main/IMG_20250918_172854_134.jpg" alt="Office" class="about-image" onerror="this.src='https://via.placeholder.com/400x200?text=MyGram+Office'">
+                <img src="/resources/views/app/main/IMG_20250918_172854_134.jpg" alt="Office" class="about-image" onerror="this.src='https://via.placeholder.com/400x200?text=FortuneFlow+Office'">
                 
                 <h2 class="about-title">{{ env('APP_NAME') }}</h2>
                 

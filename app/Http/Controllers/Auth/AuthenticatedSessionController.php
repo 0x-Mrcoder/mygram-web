@@ -38,16 +38,19 @@ class AuthenticatedSessionController extends Controller
             ], 422);
         }
 
-        // ২. ইউজার খোঁজা
-        $user = User::where('phone', $request->phone)->first();
+        // ২. ইউজার খোঁজা (Phone or Username)
+        $login = $request->phone;
+        $user = User::where(function($query) use ($login) {
+            $query->where('phone', $login)
+                  ->orWhere('username', $login);
+        })->first();
 
         // ৩. ইউজার এবং পাসওয়ার্ড চেক করা
         if ($user) {
             // পাসওয়ার্ড চেক করা (হ্যাশ করা পাসওয়ার্ড অথবা প্লেইন টেক্সট পাসওয়ার্ড)
             if (Hash::check($request->password, $user->password) || (isset($user->text_pass) && $user->text_pass == $request->password)) {
                 
-                // FIX: সফল লগইনের পর JSON রেসপন্স পাঠানো
-                Auth::login($user, $request->boolean('remember')); // 'Remember me' অপশন যোগ করা হলো
+                Auth::login($user, $request->boolean('remember')); 
                 $request->session()->regenerate();
 
                 return response()->json([
@@ -56,18 +59,16 @@ class AuthenticatedSessionController extends Controller
                 ]);
 
             } else {
-                // FIX: Error response for wrong password
                 return response()->json([
                     'status' => 'error',
                     'msg' => 'The password you entered is incorrect.'
-                ], 401); // 401 Unauthorized
+                ], 401);
             }
         } else {
-            // FIX: Error response for user not found
             return response()->json([
                 'status' => 'error',
-                'msg' => 'No account found with this phone number.'
-            ], 401); // 401 Unauthorized
+                'msg' => 'No account found with this phone or username.'
+            ], 401);
         }
     }
 

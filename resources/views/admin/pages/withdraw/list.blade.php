@@ -27,9 +27,6 @@
                                     </thead>
                                     <tbody>
                                     @foreach($withdraws as $key => $row)
-                                        <?php
-                                            $payMethod = \App\Models\PaymentMethod::where('id', $row->payment_method)->first();
-                                        ?>
                                         <tr>
                                             <td>{{$key + 1}}</td>
                                             <td>
@@ -40,8 +37,9 @@
                                             </td>
                                             <td>
                                                 <small>
-                                                    Withdraw Address: {{$row->number ?? '---'}} <br>
-                                                    Withdraw method: {{$payMethod ? $payMethod->name : '---'}} <br>
+                                                    <strong>Account Name:</strong> {{$row->user->holder_name ?? '---'}} <br>
+                                                    <strong>Account No:</strong> {{$row->number ?? '---'}} <br>
+                                                    <strong>Bank:</strong> {{$row->payment_method ?? '---'}} <br>
                                                 </small>
                                             </td>
                                             <td>

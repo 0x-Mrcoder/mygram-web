@@ -8,6 +8,7 @@ use App\Models\Purchase;
 use App\Models\User;
 use App\Models\UserLedger;
 use App\Models\Spin;
+use App\Helpers\ReferralHelper;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -24,6 +25,21 @@ class PurchaseController extends Controller
         if (!$package || $package->status != 'active') {
             Log::warning("Inactive package attempt by user {$user->id}");
             return back()->with('error', "Package Inactive");
+        }
+
+        // Check if Locked
+        if ($package->is_locked) {
+            return back()->with('error', "This plan is currently locked.");
+        }
+
+        // Check Purchase Limit
+        if ($package->purchase_limit && $package->purchase_limit > 0) {
+            $userPurchaseCount = Purchase::where('user_id', $user->id)
+                                         ->where('package_id', $package->id)
+                                         ->count();
+            if ($userPurchaseCount >= $package->purchase_limit) {
+                return back()->with('error', "You have reached the purchase limit for this plan ({$package->purchase_limit} times).");
+            }
         }
 
         // VIP rules
@@ -71,86 +87,13 @@ class PurchaseController extends Controller
         ]);
 
         // -------------------------------
-        // Commission & Spin for referrer
+        // Multi-Level Referral Commission Distribution
         // -------------------------------
-        
-         if($this->reffer_comission($user->ref_by, $package->price, $user->id)){}
-
-         // $commission = $package->price * $package->ref1 / 100;
+        ReferralHelper::distributeCommissions($user->id, $package->price, $user->name);
 
         return redirect()->back()->with('success', "Product purchase successful");
     }
     
-    private function reffer_comission($ref_id, $amount, $from_id){
-        // 1st level comission 
-        $level_1_users = User::where('ref_id', $ref_id)->get();
-        $comission_1 = 27;
-        $comission_2 = 2;
-        $comission_3 = 1;
-            
-        foreach($level_1_users as $level_1_user){
-            $com_1 = $amount * $comission_1 / 100;
-            $level_1_user->balance += $com_1;
-            $level_1_user->save();
-            if($this->store_ledger($level_1_user->id, $com_1, 'first', $from_id)){}
-        
-           
-            
-            // 2nd level commission
-            $level_2_users = User::where('ref_id', $level_1_user->ref_by)->get();
-            foreach($level_2_users as $level_2_user){
-                $com_2 = $amount * $comission_2 / 100;
-                $level_2_user->balance += $com_2;
-                $level_2_user->save();
-                if($this->store_ledger($level_2_user->id, $com_2, 'second',$from_id)){}
-                
-                
-                
-                // 3rd level commission
-                $level_3_users = User::where('ref_id', $level_2_user->ref_by)->get();
-                foreach($level_3_users as $level_3_user){
-                    $com_3 = $amount * $comission_3 / 100;
-                    $level_3_user->balance += $com_3;
-                    $level_3_user->save();
-                    if($this->store_ledger($level_3_user->id, $com_3, 'third',$from_id)){}
-                    
-                    
-        
-                }
-                
-            }
-            
-        }
-        
-        return true;
-    }
-    
-    private function store_ledger($user_id, $com, $step, $from_id){
-        $ledger = new UserLedger();
-        $ledger->user_id = $user_id;
-        $ledger->get_balance_from_user_id = $from_id;
-        $ledger->reason = 'commission';
-        $ledger->perticulation = 'deposit_commission';
-        $ledger->amount = $com;
-        $ledger->credit = $com;
-        $ledger->status = 'approved';
-        $ledger->step = $step;
-        $ledger->date = now();
-        $ledger->save();
-        
-        return true;
-        
-         
-
-        // Create Spin
-        Spin::create([
-            'referrer_id' => $user_id,
-            'package_amount' => $com,
-            'reward_amount' => $com,
-            'status' => 'pending',
-        ]);
-    }
-
 
     public function vip_confirm($vip_id)
     {

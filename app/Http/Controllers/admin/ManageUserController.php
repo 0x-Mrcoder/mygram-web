@@ -55,6 +55,17 @@ class ManageUserController extends Controller
         return redirect()->back()->with('success', 'Successfully changed user status.');
     }
 
+    public function withdrawStatus($id)
+    {
+        $user = User::findOrFail($id);
+        // Toggle the boolean (default is 1/true, so we toggle it)
+        $user->is_withdraw_active = !$user->is_withdraw_active;
+        $user->save();
+        
+        $statusMsg = $user->is_withdraw_active ? 'Unblocked' : 'Blocked';
+        return redirect()->back()->with('success', "Withdrawal has been $statusMsg for this user.");
+    }
+
     public function user_acc_login($id)
     {
         $user = User::find($id);

@@ -28,6 +28,7 @@ class User extends Authenticatable
         'balance',
         'phone',
         'sign_every_day',
+        'virtual_account_provider',
     ];
 
     /**

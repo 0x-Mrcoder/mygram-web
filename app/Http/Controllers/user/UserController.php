@@ -1,4 +1,4 @@
-<?php
+`<?php
 
 namespace App\Http\Controllers\user;
 
@@ -45,8 +45,12 @@ class UserController extends Controller
         $level3Count = User::whereIn('ref_by', $level2Users->pluck('ref_id'))->count();
 
         $totalReferralCount = $level1Count + $level2Count + $level3Count;
+        
+        $setting = \App\Models\Setting::first();
+        $sliders = \App\Models\VipSlider::where('status', 'active')->get();
+        $userPurchases = \App\Models\Purchase::where('user_id', Auth::id())->get()->groupBy('package_id');
 
-        return view('app.main.index' , compact('totalWithdraw' , 'totalDeposit' , 'totalReferralCount'));
+        return view('app.main.index' , compact('totalWithdraw' , 'totalDeposit' , 'totalReferralCount', 'setting', 'sliders', 'userPurchases'));
     }
 
     public function record_award()
@@ -67,8 +71,10 @@ class UserController extends Controller
         $activePurchaseCount = Purchase::where('user_id', Auth::id())
             ->where('status', 'active')
             ->count();
+            
+        $setting = \App\Models\Setting::first();
         
-        return view('app.main.mine' , compact('totalWithdraw' , 'totalDeposit' , 'activePurchaseCount'));
+        return view('app.main.mine' , compact('totalWithdraw' , 'totalDeposit' , 'activePurchaseCount', 'setting'));
     }
     
     public function reward_award()
@@ -197,9 +203,14 @@ class UserController extends Controller
     
         public function createTopupOrder(Request $request)
     {
-        // Validate minimum amount
+        // Validate minimum amount from Settings
+        $setting = \App\Models\Setting::first();
+        $minAmount = $setting->minimum_recharge ?? 1000;
+
         $request->validate([
-            'amount' => 'required|numeric|min:100'
+            'amount' => 'required|numeric|min:' . $minAmount
+        ], [
+            'amount.min' => 'Minimum deposit amount is ₦' . number_format($minAmount)
         ]);
 
         $user = Auth::user();
@@ -219,8 +230,14 @@ class UserController extends Controller
         }
 
         if (setting('payment_mode') == 'virtual_account') {
-            if (!$user->virtual_account_number) {
-                return redirect()->back()->with('error', 'Please generate your Dedicated Virtual Account first.');
+            $activeProvider = $setting->virtual_gateway ?? 'payrant';
+            if (!$user->virtual_account_number || $user->virtual_account_provider !== $activeProvider) {
+                $this->performVirtualAccountGeneration($user, $setting);
+                // Refresh user model to get new account details
+                $user->refresh();
+                if (!$user->virtual_account_number) {
+                    return redirect()->back()->with('error', 'Failed to auto-generate virtual account. Please try again.');
+                }
             }
             return redirect()->route('user.virtual_account_payment', ['id' => $deposit->id]);
         }
@@ -337,26 +354,32 @@ class UserController extends Controller
 public function manualPaymentPage($id)
 {
     $order = Deposit::findOrFail($id);
+    $methods = \App\Models\PaymentMethod::where('status', 'active')->get();
 
-    return view('app.main.recharge.manual_payment', compact('order'));
+    return view('app.main.recharge.manual_payment', compact('order', 'methods'));
 }
 
   
   
   
-public function confirmPayment($id)
-{
-    $order = Deposit::where('id', $id)
-        ->where('user_id', Auth::id())
-        ->firstOrFail();
+    public function confirmPayment(Request $request, $id)
+    {
+        $request->validate([
+            'sender_name' => 'required|string|max:255',
+        ]);
 
-    // Mark as pending for admin to approve
-    $order->status = 'pending';
-    $order->save();
+        $order = Deposit::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
 
-    return redirect()->route('deposit.record')
-        ->with('success', 'Payment submitted.');
-}
+        // Mark as pending for admin to approve
+        $order->status = 'pending';
+        $order->sender_name = $request->sender_name;
+        $order->save();
+
+        return redirect()->route('deposit.record')
+            ->with('success', 'Payment submitted.');
+    }
   
 
     public function apply_task_commission($task_id){
@@ -418,13 +441,15 @@ public function confirmPayment($id)
     }
 
     public function recharge()
-{
-    $userId = Auth::id();
+    {
+        $userId = Auth::id();
+        $setting = \App\Models\Setting::first();
+        $packages = \App\Models\Package::where('status', 'active')->where('tab', 'vip')->orderBy('price', 'asc')->get();
 
-    $totalDeposit = Deposit::where('user_id', $userId)->sum('amount');
+        $totalDeposit = Deposit::where('user_id', $userId)->sum('amount');
 
-    return view('app.main.recharge.index', compact('totalDeposit'));
-}
+        return view('app.main.recharge.index', compact('totalDeposit', 'setting', 'packages'));
+    }
     public function apiPayment(Request $request)
     {
         $validate = Validator::make($request->all(), [
@@ -687,20 +712,36 @@ public function claimAll()
     public function generateVirtualAccount(Request $request)
     {
         $user = User::find(Auth::id());
+        $setting = \App\Models\Setting::first();
 
+        // Check if user already has a virtual account that matches the active provider
+        $activeProvider = $setting->virtual_gateway ?? 'payrant';
+        if ($user->virtual_account_number && $user->virtual_account_provider === $activeProvider) {
+            return back()->with('success', 'You already have an active dedicated virtual account.');
+        }
+
+        $result = $this->performVirtualAccountGeneration($user, $setting);
+
+        if ($result['success']) {
+            return back()->with('success', $result['message']);
+        } else {
+            return back()->with('error', $result['message']);
+        }
+    }
+
+    /**
+     * Internal logic to generate or update a virtual account for a user.
+     */
+    protected function performVirtualAccountGeneration($user, $setting)
+    {
         // FIX: Detect and clear corrupt "Integer Overflow" account number
         if ($user->virtual_account_number == '2147483647') {
             $user->virtual_account_number = null;
             $user->save();
         }
 
-        // Check if user already has a virtual account
-        if ($user->virtual_account_number) {
-            return back()->with('success', 'You already have a dedicated virtual account.');
-        }
-
         try {
-            $payrant = new Payrant();
+            $gateway = $setting->virtual_gateway ?? 'payrant';
 
             // Format Phone: Ensure it starts with 0
             $phone = $user->phone;
@@ -712,46 +753,72 @@ public function claimAll()
             $cleanName = strtolower(str_replace(' ', '', $user->name));
             $generatedEmail = $cleanName . '@gmail.com';
 
-            $nameParts = explode(' ', $user->name);
-            $firstName = $nameParts[0] ?? 'User';
-            $lastName = $nameParts[1] ?? $firstName; // Use first name if last name missing
+            if ($gateway == 'vtstack') {
+                $vtstack = new \App\Classes\VTStack();
+                $data = [
+                    'firstName' => $user->username,
+                    'lastName' => '(VTStack)',
+                    'email' => $generatedEmail,
+                    'phone' => $phone,
+                    'bvn' => $this->generateRandomBVN(),
+                    'identityType' => 'INDIVIDUAL',
+                    'reference' => 'ref_' . time() . '_' . $user->id
+                ];
 
-            // Payload strictly based on documentation
-            $data = [
-                 'documentType' => 'nin', // Lowercase 'nin' as per doc
-                 'documentNumber' => $phone, // Using Phone as requested (docs example: "8149999933")
-                 'virtualAccountName' => $user->name,
-                 'customerName' => $firstName, // Docs say "Test", likely First Name or Full Name. Using First Name.
-                 'email' => $generatedEmail,
-                 'accountReference' => 'ref_' . time() . '_' . $user->id
-            ];
-            
-            Log::info('Generating Virtual Account (Strict Doc)', $data);
+                Log::info('VTStack: Generating Virtual Account', $data);
+                $response = $vtstack->createVirtualAccount($data);
 
-            $response = $payrant->createVirtualAccount($data);
+                if (isset($response['success']) && $response['success'] == true) {
+                    $user->virtual_account_number = $response['data']['accountNumber'];
+                    $user->virtual_account_name = $response['data']['accountName'];
+                    $user->virtual_bank_name = $response['data']['bankName']; // Usually PalmPay
+                    $user->virtual_account_provider = 'vtstack';
+                    $user->save();
 
-            Log::info('Generate Virtual Account Response', ['response' => $response]);
-
-            // Response handling based on docs: "status": "Enabled", "account_no": "..."
-            if (isset($response['status']) && $response['status'] == 'Enabled') {
-                
-                $user->virtual_account_number = $response['account_no']; // Doc: "account_no"
-                // Clean the name (remove (Payrant) suffix if present)
-                $cleanName = str_replace('(Payrant)', '', $response['virtualAccountName']);
-                $user->virtual_account_name = trim($cleanName); 
-                
-                $user->virtual_bank_name = 'Palmpay'; 
-                $user->save();
-
-                return back()->with('success', 'Virtual Account generated successfully!');
+                    return ['success' => true, 'message' => 'Virtual Account generated successfully via VTStack!'];
+                } else {
+                    return ['success' => false, 'message' => 'VTStack Error: ' . ($response['message'] ?? 'Unknown error')];
+                }
             } else {
-                return back()->with('error', 'Failed to generate account: ' . ($response['message'] ?? 'Unknown error'));
+                // Fallback to Payrant
+                $payrant = new \App\Classes\Payrant();
+                $data = [
+                     'documentType' => 'nin',
+                     'documentNumber' => $phone,
+                     'virtualAccountName' => 'FortuneFlow',
+                     'customerName' => $firstName,
+                     'email' => $generatedEmail,
+                     'accountReference' => 'ref_' . time() . '_' . $user->id
+                ];
+                
+                $response = $payrant->createVirtualAccount($data);
+
+                if (isset($response['status']) && $response['status'] == 'Enabled') {
+                    $user->virtual_account_number = $response['account_no'];
+                    $cleanName = str_replace('(Payrant)', '', $response['virtualAccountName']);
+                    $user->virtual_account_name = trim($cleanName); 
+                    $user->virtual_bank_name = 'Palmpay'; 
+                    $user->virtual_account_provider = 'payrant';
+                    $user->save();
+
+                    return ['success' => true, 'message' => 'Virtual Account generated successfully!'];
+                } else {
+                    return ['success' => false, 'message' => 'Payrant Error: ' . ($response['message'] ?? 'Unknown error')];
+                }
             }
 
         } catch (\Exception $e) {
             Log::error('Virtual Account Generation Exception', ['error' => $e->getMessage()]);
-            return back()->with('error', 'An error occurred while generating account.');
+            return ['success' => false, 'message' => 'An error occurred while generating account.'];
         }
+    }
+
+    /**
+     * Generate a random 11-digit BVN starting with 22.
+     */
+    private function generateRandomBVN()
+    {
+        return '22' . mt_rand(100000000, 999999999);
     }
 
     // ✅ Virtual Account Payment Page
@@ -811,8 +878,8 @@ public function claimAll()
                 // Clean the incoming name to match our DB format (remove (Payrant))
                 $cleanAccountName = trim(str_replace(['(Payrant)'], '', $rawAccountName));
 
-                // DOCS SAY: Credit 'net_amount' (amount minus fees)
-                $amount = $transaction['net_amount'] ?? $transaction['amount'] ?? 0;        
+                // Credit FULL amount (UniqWealth absorbs Payrant fees)
+                $amount = $transaction['amount'] ?? 0;        
                 
                 $reference = $transaction['reference'] ?? 'PAYRANT_' . time();
                 
@@ -821,10 +888,8 @@ public function claimAll()
 
                 Log::info("Payrant Webhook Process: Acc ($accountNumber), Name ($cleanAccountName)");
 
-                // 5. Find User (Try Account Number FIRST, then Name Fallback)
-                $user = User::where('virtual_account_number', $accountNumber)
-                            ->orWhere('virtual_account_name', $cleanAccountName) 
-                            ->first();
+                // 5. Find User by Account Number ONLY (name is same for all users!)
+                $user = User::where('virtual_account_number', $accountNumber)->first();
 
                 if ($user) {
                     // Update stored Number if needed
@@ -852,7 +917,8 @@ public function claimAll()
                         // $deposit->note = ... removed
                         $deposit->save();
                         
-                        $user->increment('balance', $amount);
+                        $user->fresh()->increment('balance', $amount);
+                        $user->refresh();
                         
                         $ledger = new UserLedger();
                         $ledger->user_id = $user->id;
@@ -881,8 +947,9 @@ public function claimAll()
                          $deposit->status = 'approved';
                          $deposit->save();
 
-                         // Credit User
-                         $user->increment('balance', $amount);
+                         // Credit User (reload to ensure fresh data)
+                         $user->fresh()->increment('balance', $amount);
+                         $user->refresh();
 
                          $ledger = new UserLedger();
                          $ledger->user_id = $user->id;

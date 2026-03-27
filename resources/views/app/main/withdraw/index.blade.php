@@ -2,350 +2,321 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, minimal-ui, viewport-fit=cover">
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.png">
-    <title>Withdraw - MyGram</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover">
+    <title>Withdraw - FortuneFlow</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <style>
         :root {
-            --primary: #ee667f;
-            --primary-dark: #d64d66;
-            --accent: #ff8fa3;
-            --bg-body: #f0f2f5;
-            --surface: #ffffff;
-            --text-main: #2d3436;
-            --text-sub: #636e72;
-            --glass: rgba(255, 255, 255, 0.9);
-            --shadow-sm: 0 4px 6px rgba(0,0,0,0.02);
-            --shadow-md: 0 10px 20px rgba(238, 102, 127, 0.15);
-            --radius-lg: 24px;
-            --radius-md: 16px;
+            --ios-bg: #0A0E1A;
+            --ios-card: #161B2D;
+            --ios-blue: #F1C40F;
+            --ios-gray: #A0AEC0;
+            --ios-red: #E74C3C;
+            --ios-divider: #2D3748;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-body); color: var(--text-main); padding-bottom: 100px; }
-        
-        .main-wrapper { max-width: 480px; margin: 0 auto; background: var(--bg-body); min-height: 100vh; position: relative; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--ios-bg);
+            color: #fff;
+            padding-bottom: 90px;
+            padding-top: max(20px, env(safe-area-inset-top));
+        }
 
         /* Header */
-        .hero-header {
-            background: linear-gradient(135deg, #ca526aff 0%, #528f9eff 100%);
-            padding: 20px 20px 60px;
-            border-radius: 0 0 40px 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-            margin-bottom: -40px;
-            text-align: center;
-            color: white;
-            position: relative;
-            z-index: 1;
-        }
-        .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-        .back-btn { color: white; font-size: 20px; text-decoration: none; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(255,255,255,0.2); backdrop-filter: blur(5px); }
-        .page-title { font-size: 20px; font-weight: 700; }
-        .header-spacer { width: 40px; }
-
-        /* Content */
-        .section-container { padding: 0 20px; position: relative; z-index: 10; }
-
-        /* Balance Card */
-        .balance-card {
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 25px;
-            box-shadow: var(--shadow-md);
-            margin-bottom: 20px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .balance-label { font-size: 14px; color: var(--text-sub); margin-bottom: 5px; }
-        .balance-amount { font-size: 32px; font-weight: 700; color: var(--primary); margin-bottom: 5px; }
-        .balance-icon {
-            width: 60px; height: 60px;
-            background: #fff0f3;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px; color: var(--primary);
-            margin: 0 auto 15px;
-        }
-
-        /* Form */
-        .form-card {
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            box-shadow: var(--shadow-sm);
-            margin-bottom: 20px;
-        }
-        .form-group { margin-bottom: 20px; }
-        .form-label { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; display: block; }
-        
-        .account-select {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid transparent;
-        }
-        .account-select:active { transform: scale(0.98); background: #fff0f3; border-color: var(--primary); }
-        .account-icon {
-            width: 40px; height: 40px;
-            background: white;
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--primary);
-            font-size: 18px;
-            margin-right: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .account-info { flex: 1; }
-        .account-name { font-size: 15px; font-weight: 600; color: var(--text-main); }
-        .account-arrow { color: #ccc; font-size: 14px; }
-
-        .input-wrapper {
-            position: relative;
-            background: #f8f9fa;
-            border-radius: var(--radius-md);
-            padding: 5px 15px;
-            border: 1px solid transparent;
-            transition: all 0.3s;
-        }
-        .input-wrapper:focus-within { background: white; border-color: var(--primary); box-shadow: 0 4px 12px rgba(238, 102, 127, 0.1); }
-        .currency-symbol {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text-main);
-        }
-        .amount-input {
-            width: 100%;
-            border: none;
-            background: transparent;
-            padding: 15px 15px 15px 30px;
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-main);
-            outline: none;
-        }
-        .amount-input::placeholder { color: #ccc; }
-
-        /* Fee Info */
-        .fee-info {
-            background: #fff0f3;
-            border-radius: var(--radius-md);
-            padding: 15px;
-            margin-top: 20px;
-        }
-        .fee-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; }
-        .fee-row:last-child { margin-bottom: 0; border-top: 1px dashed rgba(238, 102, 127, 0.3); padding-top: 8px; margin-top: 8px; }
-        .fee-label { color: var(--text-sub); }
-        .fee-value { font-weight: 600; color: var(--text-main); }
-        .fee-value.highlight { color: var(--primary); }
-
-        .submit-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #ee667f 0%, #d64d66 100%);
-            color: white;
-            border: none;
-            padding: 16px;
-            border-radius: var(--radius-lg);
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 8px 20px rgba(238, 102, 127, 0.3);
-            transition: transform 0.2s;
-            margin-top: 10px;
-        }
-        .submit-btn:active { transform: scale(0.98); }
-
-        .notice-card {
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            box-shadow: var(--shadow-sm);
-            margin-top: 20px;
-        }
-        .notice-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-        .notice-title i { color: var(--primary); }
-        .notice-text { font-size: 12px; color: var(--text-sub); line-height: 1.6; }
-
-        /* Floating Navigation */
-        .floating-nav {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 400px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
+        .page-header {
             padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            z-index: 1000;
-            border: 1px solid rgba(255,255,255,0.5);
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            position: relative;
         }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .history-btn {
+            position: absolute; right: 20px; top: 10px;
+            font-size: 14px; color: var(--ios-blue); text-decoration: none;
+        }
+
+        /* Container */
+        .w-container { padding: 0 20px; }
+
+        /* Balance */
+        .bal-card {
+            text-align: center; margin-bottom: 30px;
+        }
+        .bal-lbl { font-size: 13px; color: var(--ios-gray); margin-bottom: 5px; }
+        .bal-val { font-size: 34px; font-weight: 700; letter-spacing: -1px; }
+
+        /* Bank Selector Group */
+        .list-group {
+            background: var(--ios-card);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+        .list-item {
+            display: flex; align-items: center;
+            padding: 12px 16px;
+            background: var(--ios-card);
             text-decoration: none;
-            color: #b2bec3;
-            font-size: 10px;
-            font-weight: 500;
-            gap: 4px;
-            transition: all 0.3s;
-            width: 50px;
+            color: #fff;
+            cursor: pointer;
         }
-        .nav-item i { font-size: 20px; transition: transform 0.2s; }
-        .nav-item.active { color: var(--primary); }
-        .nav-item.active i { transform: translateY(-2px); }
+        .list-item:active { background: #2D3748; }
         
-        .nav-center {
-            width: 56px;
-            height: 56px;
-            background: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: -30px;
-            box-shadow: 0 8px 20px rgba(238, 102, 127, 0.4);
-            border: 4px solid var(--bg-body);
-            color: white;
-            font-size: 22px;
-            text-decoration: none;
+        .li-icon {
+            width: 30px; height: 30px;
+            border-radius: 7px; background: var(--ios-blue);
+            color: white; display: flex; align-items: center; justify-content: center;
+            font-size: 14px; margin-right: 12px;
         }
+        .li-content { flex: 1; }
+        .li-title { font-size: 16px; margin-bottom: 2px; }
+        .li-sub { font-size: 13px; color: var(--ios-gray); }
+        .li-arrow { color: #C7C7CC; font-size: 14px; }
+
+        /* Input Group */
+        .input-group {
+            background: var(--ios-card);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 25px;
+            display: flex; align-items: center;
+        }
+        .curr-sym { font-size: 20px; font-weight: 600; color: #fff; margin-right: 10px; }
+        .amt-inp {
+            flex: 1; border: none; outline: none; background: transparent;
+            font-size: 20px; font-weight: 600; color: #fff;
+        }
+        .amt-inp::placeholder { color: #C7C7CC; }
+
+        /* Button */
+        .w-btn {
+            width: 100%; padding: 16px;
+            background: var(--ios-blue); color: #000;
+            border: none; border-radius: 14px;
+            font-size: 16px; font-weight: 700;
+            cursor: pointer; margin-bottom: 30px;
+        }
+        .w-btn:active { opacity: 0.8; }
+
+        /* Rules */
+        .rules-box {
+            padding: 0 10px;
+        }
+        .rb-title { font-size: 13px; color: var(--ios-gray); text-transform: uppercase; font-weight: 600; margin-bottom: 10px; }
+        .rule-item {
+            font-size: 13px; color: var(--ios-gray); margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        /* Modal Sheet */
+        .sheet-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4); z-index: 999;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        .sheet-panel {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: #161B2D; border-radius: 14px 14px 0 0;
+            padding: 20px 20px 40px; transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1000;
+            color: #fff;
+        }
+        .sheet-active .sheet-overlay { opacity: 1; pointer-events: auto; }
+        .sheet-active .sheet-panel { transform: translateY(0); }
+
+        .sheet-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 25px;
+        }
+        .sh-title { font-size: 17px; font-weight: 600; }
+        .sh-cancel { color: var(--ios-blue); font-size: 16px; cursor: pointer; }
+
+        .confirm-list {
+            background: #2D3748; border-radius: 12px;
+            padding: 0 15px; margin-bottom: 25px;
+        }
+        .cl-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 0; border-bottom: 0.5px solid #161B2D;
+        }
+        .cl-row:last-child { border-bottom: none; }
+        .cl-lbl { font-size: 15px; }
+        .cl-val { font-size: 15px; color: var(--ios-gray); }
+        .cl-val.highlight { color: #fff; font-weight: 600; }
+
+        .confirm-btn {
+            width: 100%; padding: 16px; background: var(--ios-blue);
+            color: #000; border: none; border-radius: 12px;
+            font-size: 16px; font-weight: 600; cursor: pointer;
+        }
+
+        /* Navigation */
+        .ios-tab-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: rgba(16, 20, 35, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 0.5px solid rgba(255,255,255,0.1);
+            display: flex; justify-content: space-around;
+            padding-top: 10px;
+            padding-bottom: max(10px, env(safe-area-inset-bottom));
+            z-index: 100;
+        }
+        .tab-item {
+            text-decoration: none;
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            color: #999;
+            flex: 1;
+        }
+        .tab-item i { font-size: 22px; }
+        .tab-item span { font-size: 10px; font-weight: 600; }
+        .tab-item.active { color: var(--ios-blue); }
+
     </style>
 </head>
 <body>
-    <div class="main-wrapper">
-        <!-- Header -->
-        <div class="hero-header">
-            <div class="header-top">
-                <a href="javascript:history.back()" class="back-btn"><i class="fa-solid fa-chevron-left"></i></a>
-                <div class="page-title">Withdraw</div>
-                <div class="header-spacer"></div>
+
+    <div class="page-header">
+        Withdraw
+        <a href="{{ route('withdraw.record') }}" class="history-btn">History</a>
+    </div>
+
+    <div class="w-container">
+        
+        <div class="bal-card">
+            <div class="bal-lbl">Available Balance</div>
+            <div class="bal-val">₦{{ number_format(auth()->user()->balance, 2) }}</div>
+        </div>
+
+        <form action="{{route('user.withdraw-confirm-submit')}}" method="POST" id="withdrawForm">
+            @csrf
+
+            <!-- Bank Selector -->
+            <div class="list-group">
+                <a href="/add/card" class="list-item">
+                    <div class="li-icon"><i class="fas fa-university"></i></div>
+                    <div class="li-content">
+                        <div class="li-title">Withdraw To</div>
+                        <div class="li-sub">{{ auth()->user()->holder_name ?? 'Select Bank Account' }}</div>
+                    </div>
+                    <i class="fas fa-chevron-right li-arrow"></i>
+                </a>
             </div>
-        </div>
 
-        <!-- Content -->
-        <div class="section-container">
-            
-            <form action="{{route('user.withdraw-confirm-submit')}}" method="POST">
-                @csrf
+            <!-- Amount Input -->
+            <div class="input-group">
+                <span class="curr-sym">₦</span>
+                <input type="number" name="amount" id="wAmount" class="amt-inp" placeholder="0.00" required>
+            </div>
 
-                <!-- Balance Card -->
-                <div class="balance-card">
-                    <div class="balance-icon"><i class="fa-solid fa-wallet"></i></div>
-                    <div class="balance-label">Available Balance</div>
-                    <div class="balance-amount">₦ {{ number_format(auth()->user()->balance, 2) }}</div>
+            <button type="button" class="w-btn" onclick="openConfirm()">Withdraw</button>
+
+            <!-- Rules -->
+            <div class="rules-box">
+                <div class="rb-title">Information</div>
+                <div class="rule-item">Min withdrawal: ₦{{ number_format($setting->minimum_withdraw) }}</div>
+                <div class="rule-item">Handling fee: {{ $setting->withdraw_charge }}%</div>
+                <div class="rule-item">Maximum withdrawal: ₦{{ number_format($setting->maximum_withdraw) }}</div>
+                <div class="rule-item">Processing time: 10:00 AM - 5:40 PM (Mon-Fri)</div>
+            </div>
+
+        </form>
+
+    </div>
+
+    <!-- Confirm Sheet -->
+    <div id="confirmSheet" class="sheet-overlay">
+        <div class="sheet-panel">
+            <div class="sheet-header">
+                <div class="sh-cancel" onclick="closeConfirm()">Cancel</div>
+                <div class="sh-title">Confirm</div>
+                <div style="width:50px;"></div> <!-- Spacer -->
+            </div>
+
+            <div class="confirm-list">
+                <div class="cl-row">
+                    <span class="cl-lbl">Withdraw Amount</span>
+                    <span class="cl-val highlight" id="cAmount">₦0.00</span>
                 </div>
-
-                <div class="form-card">
-                    <!-- Account Selection -->
-                    <div class="form-group">
-                        <label class="form-label">Withdrawal Account</label>
-                        <div class="account-select" onclick="window.location.href='/add/card'">
-                            <div class="account-icon"><i class="fa-solid fa-building-columns"></i></div>
-                            <div class="account-info">
-                                <div class="account-name">{{ auth()->user()->holder_name ?? 'Add Bank Account' }}</div>
-                            </div>
-                            <i class="fa-solid fa-chevron-right account-arrow"></i>
-                        </div>
-                    </div>
-
-                    <!-- Amount Input -->
-                    <div class="form-group">
-                        <label class="form-label">Withdrawal Amount</label>
-                        <div class="input-wrapper">
-                            <span class="currency-symbol">₦</span>
-                            <input type="number" class="amount-input" name="amount" id="withdrawAmount" placeholder="0.00" min="150" oninput="calculateFee(this.value)" required>
-                        </div>
-                    </div>
-
-                    <!-- Fee Info -->
-                    <div class="fee-info">
-                        <div class="fee-row">
-                            <span class="fee-label">Handling Fee (6%)</span>
-                            <span class="fee-value" id="feeAmount">-₦0.00</span>
-                        </div>
-                        <div class="fee-row">
-                            <span class="fee-label">You Receive</span>
-                            <span class="fee-value highlight" id="receiveAmount">₦0.00</span>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="submit-btn">
-                        Submit Withdrawal
-                    </button>
+                <div class="cl-row">
+                    <span class="cl-lbl">Fee ({{ $setting->withdraw_charge }}%)</span>
+                    <span class="cl-val" id="cFee">₦0.00</span>
                 </div>
-
-                <!-- Notice -->
-                <div class="notice-card">
-                    <div class="notice-title">
-                        <i class="fa-solid fa-circle-info"></i> Withdrawal Rules
-                    </div>
-                    <div class="notice-text">
-                        1. Minimum withdrawal amount is ₦150.<br>
-                        2. Withdrawal handling fee is 6%.<br>
-                        3. Withdrawal time: Monday to Friday, 9:00 AM - 6:00 PM.<br>
-                        4. Please ensure your bank account information is correct before submitting.
-                    </div>
+                <div class="cl-row">
+                    <span class="cl-lbl">You Receive</span>
+                    <span class="cl-val highlight" id="cReceive" style="color:var(--ios-blue);">₦0.00</span>
                 </div>
+            </div>
 
-            </form>
+            <button class="confirm-btn" onclick="submitForm()">Confirm Withdrawal</button>
         </div>
     </div>
 
-    <!-- Floating Navigation -->
-    <div class="floating-nav">
-        <a href="/" class="nav-item">
-            <i class="fa-solid fa-house-chimney"></i>
-            <span>Home</span>
-        </a>
-        <a href="/invite" class="nav-item">
-            <i class="fa-solid fa-users-line"></i>
-            <span>Team</span>
-        </a>
-        <a href="/my/vip" class="nav-center">
-            <i class="fa-solid fa-layer-group"></i>
-        </a>
-        <a href="/history" class="nav-item">
-            <i class="fa-solid fa-clock-rotate-left"></i>
-            <span>History</span>
-        </a>
-        <a href="/mine" class="nav-item">
-            <i class="fa-regular fa-user"></i>
-            <span>Profile</span>
-        </a>
-    </div>
+    <!-- Navigation -->
+    <nav class="ios-tab-bar">
+        <a href="/" class="tab-item"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="/my/vip" class="tab-item"><i class="fas fa-layer-group"></i><span>Plans</span></a>
+        <a href="/my-team" class="tab-item"><i class="fas fa-users"></i><span>Team</span></a>
+        <a href="/mine" class="tab-item"><i class="far fa-user"></i><span>Profile</span></a>
+    </nav>
 
     @include('alert-message')
 
     <script>
-        function calculateFee(amount) {
-            const feePercent = 0.06;
-            let fee = 0;
-            let receive = 0;
+        // Use the global iOSAlert from alert-message
+        
+        function openConfirm() {
+            let val = document.getElementById('wAmount').value;
+            let minWithdraw = {{ $setting->minimum_withdraw }};
+            let withdrawCharge = {{ $setting->withdraw_charge }};
 
-            if (amount && !isNaN(amount)) {
-                fee = amount * feePercent;
-                receive = amount - fee;
+            if(!val || parseFloat(val) < minWithdraw) {
+                if(typeof iOSAlert !== 'undefined') {
+                    iOSAlert.fire({ 
+                        icon: 'warning', 
+                        title: 'Invalid Amount', 
+                        text: 'Minimum withdrawal is ₦' + minWithdraw.toLocaleString() 
+                    });
+                } else {
+                    alert('Minimum withdrawal is ₦' + minWithdraw.toLocaleString());
+                }
+                return;
             }
 
-            document.getElementById('feeAmount').innerText = '-₦' + fee.toFixed(2);
-            document.getElementById('receiveAmount').innerText = '₦' + receive.toFixed(2);
+            let amt = parseFloat(val);
+            let fee = amt * (withdrawCharge / 100);
+            let rec = amt - fee;
+
+            document.getElementById('cAmount').innerText = "₦" + amt.toLocaleString();
+            document.getElementById('cFee').innerText = "₦" + fee.toLocaleString(undefined, {minimumFractionDigits:2});
+            document.getElementById('cReceive').innerText = "₦" + rec.toLocaleString(undefined, {minimumFractionDigits:2});
+
+            document.getElementById('confirmSheet').classList.add('sheet-active');
+            document.querySelector('.sheet-overlay').style.pointerEvents = 'auto';
+            document.querySelector('.sheet-overlay').style.opacity = '1';
+        }
+
+        function closeConfirm() {
+            document.getElementById('confirmSheet').classList.remove('sheet-active');
+            document.querySelector('.sheet-overlay').style.opacity = '0';
+            setTimeout(() => {
+                document.querySelector('.sheet-overlay').style.pointerEvents = 'none';
+            }, 300);
+        }
+
+        function submitForm() {
+            document.getElementById('withdrawForm').submit();
         }
     </script>
 </body>

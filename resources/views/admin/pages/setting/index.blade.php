@@ -74,8 +74,35 @@
                                         </select>
                                         <div class="valid-feedback">
                                             <i class="bx bx-radio-circle"></i>
-                                            Note: Choose between Automatic (Payrant) or Manual deposit
+                                            Note: For VTStack or Payrant Auto-generation, select "Dedicated Virtual Account (Auto)".
                                         </div>
+                                    </div>
+
+                                    <div class="col-12 mt-4">
+                                        <h5 class="text-primary">Virtual Account Gateway (Auto-Generation)</h5>
+                                        <hr>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <label for="virtual_gateway">Active Virtual Gateway</label>
+                                        <select name="virtual_gateway" id="virtual_gateway" class="form-control">
+                                            <option value="payrant" @if($data->virtual_gateway == 'payrant') selected @endif>Payrant</option>
+                                            <option value="vtstack" @if($data->virtual_gateway == 'vtstack') selected @endif>VTStack</option>
+                                        </select>
+                                        <div class="valid-feedback">
+                                            <i class="bx bx-radio-circle"></i>
+                                            Select provider for dedicated virtual accounts.
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <label for="vtstack_api_key">VTStack Secret Key (API Key)</label>
+                                        <input type="text" class="form-control" name="vtstack_api_key" id="vtstack_api_key" value="{{ $data ? $data->vtstack_api_key : old('vtstack_api_key') }}" placeholder="sk_live_...">
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <label for="vtstack_webhook_secret">VTStack Webhook Secret Key</label>
+                                        <input type="text" class="form-control" name="vtstack_webhook_secret" id="vtstack_webhook_secret" value="{{ $data ? $data->vtstack_webhook_secret : old('vtstack_webhook_secret') }}" placeholder="Signature secret">
                                     </div>
 
                                     <div class="col-sm-6">
@@ -216,20 +243,86 @@
 </div>
 
 <div class="col-sm-6">
-    <label for="refer_commission">Referral Commission</label>
+    <label for="refer_commission">Referral Commission (Legacy - Fixed Amount)</label>
     <input type="number" step="0.01" min="0" class="form-control is-valid"
            name="refer_commission" id="refer_commission"
            placeholder="Enter Referral Commission Amount"
            value="{{ $data ? $data->refer_commission : old('refer_commission') }}">
     <div class="valid-feedback">
         <i class="bx bx-radio-circle"></i>
-        Note: Commission amount given for successful referrals
+        Note: Legacy field - use percentage fields below instead
+    </div>
+</div>
+
+<div class="col-sm-6">
+    <label for="level1_commission_percent">Level 1 Commission (%)</label>
+    <input type="number" step="0.01" min="0" max="100" class="form-control is-valid"
+           name="level1_commission_percent" id="level1_commission_percent"
+           placeholder="Enter Level 1 Commission Percentage"
+           value="{{ $data ? $data->level1_commission_percent : old('level1_commission_percent', 8) }}">
+    <div class="valid-feedback">
+        <i class="bx bx-radio-circle"></i>
+        Direct referrals earn this % of package purchases
+    </div>
+</div>
+
+<div class="col-sm-6">
+    <label for="level2_commission_percent">Level 2 Commission (%)</label>
+    <input type="number" step="0.01" min="0" max="100" class="form-control is-valid"
+           name="level2_commission_percent" id="level2_commission_percent"
+           placeholder="Enter Level 2 Commission Percentage"
+           value="{{ $data ? $data->level2_commission_percent : old('level2_commission_percent', 2) }}">
+    <div class="valid-feedback">
+        <i class="bx bx-radio-circle"></i>
+        Second level referrals earn this % of package purchases
+    </div>
+</div>
+
+<div class="col-sm-6">
+    <label for="level3_commission_percent">Level 3 Commission (%)</label>
+    <input type="number" step="0.01" min="0" max="100" class="form-control is-valid"
+           name="level3_commission_percent" id="level3_commission_percent"
+           placeholder="Enter Level 3 Commission Percentage"
+           value="{{ $data ? $data->level3_commission_percent : old('level3_commission_percent', 1) }}">
+    <div class="valid-feedback">
+        <i class="bx bx-radio-circle"></i>
+        Third level referrals earn this % of package purchases
     </div>
 </div>
 
                                     
 
+                                    </div>
+
+                                    <div class="col-12 mt-4">
+                                        <h5 class="text-primary">Event Configuration</h5>
+                                        <hr>
+                                    </div>
+
                                     <div class="col-sm-6">
+                                        <label for="event_active">Event Status</label>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="event_active" name="event_active" value="1" {{ $data && $data->event_active ? 'checked' : '' }}>
+                                            <label class="custom-control-label" for="event_active">Activate Event</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <label for="event_title">Event Title</label>
+                                        <input type="text" class="form-control" name="event_title" id="event_title" value="{{ $data ? $data->event_title : old('event_title') }}" placeholder="e.g. Flash Sale!">
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <label for="event_end_time">Event End Time</label>
+                                        <input type="datetime-local" class="form-control" name="event_end_time" id="event_end_time" value="{{ $data && $data->event_end_time ? date('Y-m-d\TH:i', strtotime($data->event_end_time)) : old('event_end_time') }}">
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <label for="event_discount_percent">Global Discount (%)</label>
+                                        <input type="number" step="0.01" min="0" max="100" class="form-control" name="event_discount_percent" id="event_discount_percent" value="{{ $data ? $data->event_discount_percent : old('event_discount_percent') }}" placeholder="0">
+                                    </div>
+
+                                    <div class="col-sm-6 mt-3">
                                         <label for="daily_sign_amount">Daily sign amount</label>
                                         <input type="text" class="form-control is-valid"
                                                name="daily_sign_amount" id="daily_sign_amount"

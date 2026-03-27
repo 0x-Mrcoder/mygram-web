@@ -13,14 +13,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('spins', function (Blueprint $table) {
-            $table->id();
-            $table->integer('referrer_id');
-            $table->string('package_amount');
-            $table->string('reward_amount');
-            $table->enum('status', ['pending','claimed'])->default('pending');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('spins')) {
+            Schema::create('spins', function (Blueprint $table) {
+                $table->id();
+                $table->integer('referrer_id');
+                $table->string('package_amount');
+                $table->string('reward_amount');
+                $table->enum('status', ['pending','claimed'])->default('pending');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

@@ -1,190 +1,131 @@
 <!DOCTYPE html>
-<html lang="bn">
-
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover">
+    <title>Redeem Gift - FortuneFlow</title>
 
-  <!-- Meta -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, minimal-ui, viewport-fit=cover">
-
-  <!-- Favicons Icon -->
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.png">
-
-  <!-- Title -->
-  <title>Bonus</title>
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-  <style>
-    :root {
-        --theme-gradient: linear-gradient(135deg, #FFB74D, #FF9100);
-        --theme-primary: #FF9100;
-        --text-light: #ffffff;
-        --text-dark: #333333;
-        --background-color: #f7f8fa;
-        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
-    }
-
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        user-select: none;
-    }
-
-    body {
-        font-family: 'Poppins', sans-serif;
-        background-color: var(--background-color); 
-    }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    .page-wraper {
-        min-height: 100vh;
-        padding-bottom: 20px;
-        background-color: transparent; 
-    }
+    <style>
+        :root {
+            --ios-bg: #0A0E1A;
+            --ios-card: #161B2D;
+            --ios-blue: #F1C40F;
+            --ios-gray: #A0AEC0;
+            --ios-red: #F1C40F;
+        }
 
-    .header {
-        background: var(--theme-gradient);
-        padding: 15px;
-        display: flex;
-        align-items: center;
-        color: var(--text-light);
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .header .main-bar, .header .header-content {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .header .back-btn {
-        color: var(--text-light);
-        font-size: 20px;
-        text-decoration: none;
-    }
-    .header .mid-content {
-        flex-grow: 1;
-        text-align: center;
-    }
-    .header .mb-0 {
-        color: var(--text-light);
-        font-weight: 600;
-        font-size: 18px;
-        margin: 0;
-    }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-    /* Redeem Card Design */
-    .redeem-container {
-        padding: 20px 15px;
-    }
-    .redeem-card {
-        background: white;
-        border-radius: 20px;
-        padding: 30px 20px;
-        box-shadow: var(--card-shadow);
-        text-align: center;
-    }
-    .redeem-icon {
-        width: 80px;
-        height: 80px;
-        margin: 0 auto 25px;
-        background: var(--theme-gradient);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--text-light);
-        font-size: 36px;
-        box-shadow: 0 5px 15px rgba(255, 145, 0, 0.4);
-    }
-    
-    .code-input {
-        width: 100%;
-        height: 55px;
-        border: 1px solid #ddd;
-        border-radius: 15px;
-        font-size: 18px;
-        font-weight: 500;
-        text-align: center;
-        margin-bottom: 20px;
-        transition: all 0.3s;
-        font-family: 'Poppins', sans-serif;
-    }
-    .code-input:focus {
-        border-color: var(--theme-primary);
-        box-shadow: 0 0 0 3px rgba(255, 145, 0, 0.2);
-        outline: none;
-    }
-    .redeem-btn {
-        background: var(--theme-gradient);
-        color: var(--text-light);
-        border: none;
-        border-radius: 50px;
-        height: 55px;
-        font-size: 18px;
-        font-weight: 600;
-        width: 100%;
-        cursor: pointer;
-        transition: all 0.3s;
-        box-shadow: 0 4px 15px rgba(255, 145, 0, 0.4);
-    }
-    .redeem-btn i {
-        margin-right: 8px;
-    }
-  </style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--ios-bg);
+            color: #fff;
+            padding-bottom: 90px;
+            padding-top: max(20px, env(safe-area-inset-top));
+        }
+
+        .page-header {
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 17px; font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .r-container { padding: 0 20px; }
+
+        .input-card {
+            background: var(--ios-card);
+            border-radius: 12px;
+            padding: 30px 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+
+        .gift-icon {
+            font-size: 40px; color: var(--ios-red);
+            margin-bottom: 15px;
+        }
+
+        .desc { font-size: 14px; color: var(--ios-gray); margin-bottom: 20px; }
+
+        .code-input {
+            width: 100%; height: 50px;
+            background: #2D3748; border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px; padding: 0 15px;
+            font-size: 16px; font-weight: 600; text-align: center;
+            outline: none; margin-bottom: 20px; color: #fff;
+        }
+        .code-input:focus { border-color: var(--ios-blue); background: #2D3748; }
+
+        .redeem-btn {
+            width: 100%; padding: 16px;
+            background: var(--ios-blue); color: #000;
+            border: none; border-radius: 12px;
+            font-size: 16px; font-weight: 700;
+            cursor: pointer;
+        }
+        .redeem-btn:active { transform: scale(0.98); }
+
+        /* Navigation */
+        .ios-tab-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: rgba(16, 20, 35, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 0.5px solid rgba(255,255,255,0.1);
+            display: flex; justify-content: space-around;
+            padding-top: 10px;
+            padding-bottom: max(10px, env(safe-area-inset-bottom));
+            z-index: 100;
+        }
+        .tab-item {
+            text-decoration: none;
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            color: #999;
+            flex: 1;
+        }
+        .tab-item i { font-size: 22px; }
+        .tab-item span { font-size: 10px; font-weight: 600; }
+        .tab-item.active { color: var(--ios-blue); }
+
+    </style>
 </head>
-
 <body>
-  <div class="page-wraper">
-    <!-- Header -->
-    <header class="header">
-      <div class="main-bar">
-        <div class="container">
-          <div class="header-content">
-            <a href="javascript:history.back()" class="back-btn"><i class="fas fa-chevron-left"></i></a>
-            <div class="mid-content">
-              <h5 class="mb-0">Gift Code</h5>
-            </div>
-            <div style="width: 20px;"></div> <!-- Spacer -->
-          </div>
-        </div>
-      </div>
-    </header>
 
-    <!-- Redeem Container -->
-    <div class="redeem-container">
-      <div class="redeem-card">
-        <div class="redeem-icon">
-          <i class="fas fa-gem"></i>
-        </div>
+    <div class="page-header">Redeem Gift</div>
+
+    <div class="r-container">
         
-        <form action="{{route('submitBonusCode')}}" method="POST">
+        <form action="{{ route('user.gift_usage') }}" method="POST">
             @csrf
-            <input type="text" class="code-input" name="bonus_code" placeholder="Enter Gift Code" id="giftCode">
-            <button class="btn redeem-btn" type="submit">
-                <i class="fas fa-check-circle"></i> Redeem Now
-            </button>
+            <div class="input-card">
+                <i class="fas fa-gift gift-icon"></i>
+                <div class="desc">Enter your promo code below to receive your gift instantly.</div>
+                
+                <input type="text" name="code" class="code-input" placeholder="Enter code" required autofocus>
+                
+                <button type="submit" class="redeem-btn">Redeem Now</button>
+            </div>
         </form>
-      </div>
+
     </div>
-  </div>
 
-  @include('alert-message')
-  <script>
-    function checkin_bonus_submit() {
-        var form = document.querySelector('form');
-        form.submit();
-    }
-
-    document.getElementById("giftCode").addEventListener("keypress", function (e) {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        e.target.closest('form').submit();
-      }
-    });
-  </script>
+    <!-- Navigation -->
+    <nav class="ios-tab-bar">
+        <a href="/" class="tab-item"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="/my/vip" class="tab-item"><i class="fas fa-layer-group"></i><span>Plans</span></a>
+        <a href="/my-team" class="tab-item"><i class="fas fa-users"></i><span>Team</span></a>
+        <a href="/mine" class="tab-item"><i class="far fa-user"></i><span>Profile</span></a>
+    </nav>
+    
+    @include('alert-message')
 
 </body>
 </html>

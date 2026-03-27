@@ -69,6 +69,11 @@ class PackageController extends Controller
         $model->ref2 = $request->ref2;
         $model->ref3 = $request->ref3;
         $model->status = $request->status;
+        $model->ref3 = $request->ref3;
+        $model->status = $request->status;
+        $model->is_locked = $request->has('is_locked') ? 1 : 0;
+        $model->is_event_active = $request->has('is_event_active') ? 1 : 0;
+        $model->purchase_limit = $request->purchase_limit;
         $model->save();
         return redirect()->route($this->route.'.index')->with('success', $request->id ? 'Package Updated Successful.' : 'Package Created Successful.');
     }
@@ -79,5 +84,16 @@ class PackageController extends Controller
         deleteImage($model->photo);
         $model->delete();
         return redirect()->route($this->route.'.index')->with('success','Item Deleted Successful.');
+    }
+
+    public function eventStatus(Request $request)
+    {
+        $model = Package::find($request->id);
+        if($model){
+            $model->is_event_active = $request->status;
+            $model->save();
+            return response()->json(['status'=>true, 'msg'=>'Event status updated successfully.']);
+        }
+        return response()->json(['status'=>false, 'msg'=>'Item not found.']);
     }
 }

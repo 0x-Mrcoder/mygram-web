@@ -5,7 +5,7 @@
     height: 55px;
 }
 .header-with-logo {
-    background: #666699;
+    background: #161B2D;
 }
 
 i.fa.fa-microphone {

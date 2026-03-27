@@ -32,10 +32,10 @@ class GetBonusController extends Controller
     public function submitBonusCode(Request $request)
     {
         Validator::make($request->all(), [
-            'bonus_code' => 'required'
+            'code' => 'required'
         ]);
 
-        $code = $request->bonus_code;
+        $code = $request->code;
         $bonus = Bonus::where('status', 'active')->first();
         $user = Auth::user();
         if ($bonus) {
@@ -70,7 +70,7 @@ class GetBonusController extends Controller
                     $bonus_ledger->user_id = $user->id;
                     $bonus_ledger->bonus_id = $bonus->id;
                     $bonus_ledger->amount = $bonus->amount;
-                    $bonus_ledger->bonus_code = $request->bonus_code;
+                    $bonus_ledger->bonus_code = $request->code;
                     $bonus_ledger->save();
 
                     return redirect()->route('promo')->with('success', 'Promo Income '.price($bonus->amount));

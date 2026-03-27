@@ -27,5 +27,6 @@ class AppServiceProvider extends ServiceProvider
         {
             \URL::forceScheme('https');
         }
+        date_default_timezone_set('Africa/Lagos');
     }
 }

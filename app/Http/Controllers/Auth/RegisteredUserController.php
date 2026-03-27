@@ -27,13 +27,17 @@ class RegisteredUserController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'phone' => ['required', 'string', 'regex:/^[1-9]{1}[0-9]{9}$/', 'unique:users,phone'],
+            'username' => ['required', 'string', 'alpha_dash', 'max:20', 'unique:users,username'],
+            'phone' => ['required', 'string', 'regex:/^[0-9]{10,15}$/', 'unique:users,phone'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
             'ref_id' => ['nullable', 'string', 'exists:users,ref_id'], 
         ], [
+            'username.required' => 'Username is required.',
+            'username.unique' => 'This username is already taken.',
+            'username.alpha_dash' => 'Username can only contain letters, numbers, dashes and underscores.',
             'phone.required' => 'Phone number is required.',
             'phone.unique' => 'An account already exists with this phone number.',
-            'phone.regex' => 'Please provide a valid phone number.',
+            'phone.regex' => 'Please provide a valid phone number (e.g., 09138826727).',
             'password.required' => 'Password is required.',
             'password.min' => 'Password must be at least 6 characters.',
             'password.confirmed' => 'Password and confirm password do not match.',
@@ -55,8 +59,8 @@ class RegisteredUserController extends Controller
                 $referLimit = setting('refer_limit') ?? 1000; 
 
                 $newUser = User::create([
-                    'name' => $request->phone, 
-                    'username' => 'u' . $request->phone,
+                    'name' => $request->username, // Use username as display name
+                    'username' => $request->username,
                     'email' => $request->phone . '@example.com', 
                     'phone' => $request->phone,
                     'password' => Hash::make($request->password),
@@ -119,7 +123,7 @@ class RegisteredUserController extends Controller
 
             return response()->json([
                 'status' => 'error',
-                'msg' => 'Registration failed. Please try again.'
+                'msg' => 'Registration failed: ' . $e->getMessage()
             ], 500); 
         }
     }

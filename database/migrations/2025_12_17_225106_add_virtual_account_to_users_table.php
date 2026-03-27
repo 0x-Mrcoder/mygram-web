@@ -14,9 +14,15 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('virtual_account_number')->nullable();
-            $table->string('virtual_account_name')->nullable();
-            $table->string('virtual_bank_name')->nullable();
+            if (!Schema::hasColumn('users', 'virtual_account_number')) {
+                $table->string('virtual_account_number')->nullable();
+            }
+            if (!Schema::hasColumn('users', 'virtual_account_name')) {
+                $table->string('virtual_account_name')->nullable();
+            }
+            if (!Schema::hasColumn('users', 'virtual_bank_name')) {
+                $table->string('virtual_bank_name')->nullable();
+            }
         });
     }
 

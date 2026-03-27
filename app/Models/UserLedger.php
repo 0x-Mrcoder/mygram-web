@@ -12,6 +12,7 @@ class UserLedger extends Model
         'reason',
         'perticulation',
         'amount',
+        'credit',
         'debit',
         'status',
         'step',

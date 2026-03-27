@@ -70,14 +70,21 @@
                                     </div>
 
                                     <div class="col-sm-6">
-                                        <label for="address">Method address</label>
+                                        <label for="address">Method address (Account Number)</label>
                                         <input type="text" class="form-control is-valid"
                                                name="address" id="address"
-                                               placeholder="address" value="{{$data ? $data->address : old('address')}}" required>
+                                               placeholder="Account Number / Detail" value="{{$data ? $data->address : old('address')}}" required>
                                         <div class="valid-feedback">
                                             <i class="bx bx-radio-circle"></i>
                                             Note: This is filed is required
                                         </div>
+                                    </div>
+                                    
+                                    <div class="col-sm-12">
+                                        <label for="account_name">Account Name (Optional)</label>
+                                        <input type="text" class="form-control"
+                                               name="account_name" id="account_name"
+                                               placeholder="e.g. FortuneFlow Ltd" value="{{$data ? $data->account_name : old('account_name')}}">
                                     </div>
 
 
