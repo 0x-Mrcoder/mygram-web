@@ -15,5 +15,9 @@ class VerifyCsrfToken extends Middleware
         'webhook/payrant',
         'api/vtstack/webhook',
         'api/vtstack',
+        'home/create_topup_order',
+        'user/generate-virtual-account',
+        'user/update-name',
+        'my/name/submit',
     ];
 }
