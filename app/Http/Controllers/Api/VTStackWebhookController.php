@@ -19,6 +19,12 @@ class VTStackWebhookController extends Controller
      */
     public function handle(Request $request)
     {
+        // 1. Handle URL Validation (GET)
+        if ($request->isMethod('GET')) {
+            Log::info('VTStack Webhook: URL Validation (GET) received');
+            return response()->json(['success' => true, 'message' => 'Active']);
+        }
+
         Log::info('VTStack Webhook: Received', [
             'payload' => $request->all(),
             'headers' => $request->headers->all()
@@ -27,19 +33,26 @@ class VTStackWebhookController extends Controller
         $setting = Setting::first();
         $webhookSecret = $setting->vtstack_webhook_secret;
 
-        // 1. Get Headers
-        $receivedSecret = $request->header('X-VTStack-Secret');
-        $signature = $request->header('X-VTStack-Signature');
+        // 2. Multi-Header Detection
+        $receivedSecret = $request->header('X-VTStack-Secret') 
+                        ?? $request->header('x-vtstack-secret') 
+                        ?? $request->query('secret'); // Fallback to Query param
+
+        $signature = $request->header('X-VTStack-Signature') 
+                   ?? $request->header('x-vtstack-signature')
+                   ?? $request->header('Verif-Hash')
+                   ?? $request->header('verif-hash');
+
         $isVerified = false;
 
         if ($webhookSecret) {
-            // Check Secret Key Header first (Many gateways use this as a direct check)
-            if ($receivedSecret === $webhookSecret) {
+            // Check Secret Key Logic (Direct Comparison)
+            if ($receivedSecret && $receivedSecret === $webhookSecret) {
                 $isVerified = true;
-                Log::info('VTStack Webhook: Verified via Secret Key Header');
+                Log::info('VTStack Webhook: Verified via Secret Check');
             }
 
-            // If not verified yet, try HMAC-SHA256
+            // HMAC-SHA256
             if (!$isVerified && $signature) {
                 $computed256 = hash_hmac('sha256', $request->getContent(), $webhookSecret);
                 if (hash_equals($signature, $computed256)) {
@@ -48,7 +61,7 @@ class VTStackWebhookController extends Controller
                 }
             }
 
-            // If still not verified, try HMAC-SHA512
+            // HMAC-SHA512
             if (!$isVerified && $signature) {
                 $computed512 = hash_hmac('sha512', $request->getContent(), $webhookSecret);
                 if (hash_equals($signature, $computed512)) {
@@ -62,8 +75,11 @@ class VTStackWebhookController extends Controller
             Log::warning('VTStack Webhook: Verification failed', [
                 'has_secret' => !!$webhookSecret,
                 'has_signature' => !!$signature,
-                'received_secret' => $receivedSecret ? 'present' : 'missing'
+                'received_id' => $receivedSecret ? 'present' : 'missing',
+                'signature_present' => !!$signature
             ]);
+            // For first-time setup support, you might return 200 even on failure to avoid "Webhook disabled" by target server.
+            // But we keep 401 for security unless user asks.
             return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
         }
 
