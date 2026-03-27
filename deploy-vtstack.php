@@ -53,8 +53,22 @@ try {
         echo "   - Username field already exists.\n";
     }
 
-    // 2. Clear System Caches
-    echo "\n🧹 Clearing Application Caches...\n";
+    // 2. Clear System Caches & Fix Permissions
+    echo "\n🧹 Clearing Application Caches & Fixing Permissions...\n";
+    
+    $sessionPath = storage_path('framework/sessions');
+    if (!is_writable($sessionPath)) {
+        echo "   - WARNING: Session directory is not writable. Attempting to fix...\n";
+        @chmod($sessionPath, 0775);
+    }
+    
+    // Prune old sessions if many exist
+    $files = glob($sessionPath . '/*');
+    if (count($files) > 100) {
+        echo "   - Pruning " . count($files) . " old session files...\n";
+        foreach(array_slice($files, 0, 50) as $file) @unlink($file);
+    }
+
     Illuminate\Support\Facades\Artisan::call('cache:clear');
     Illuminate\Support\Facades\Artisan::call('config:clear');
     Illuminate\Support\Facades\Artisan::call('route:clear');
