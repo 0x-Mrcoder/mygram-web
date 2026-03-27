@@ -782,6 +782,7 @@ public function claimAll()
             } else {
                 // Fallback to Payrant
                 $payrant = new \App\Classes\Payrant();
+                $firstName = explode(' ', $user->name)[0] ?? 'User';
                 $data = [
                      'documentType' => 'nin',
                      'documentNumber' => $phone,
