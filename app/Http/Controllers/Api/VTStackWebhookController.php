@@ -24,27 +24,44 @@ class VTStackWebhookController extends Controller
         $setting = Setting::first();
         $webhookSecret = $setting->vtstack_webhook_secret;
 
-        // 1. Verify Secret Key Header (Secondary Auth)
+        // 1. Get Headers
         $receivedSecret = $request->header('X-VTStack-Secret');
-        if ($webhookSecret && $receivedSecret !== $webhookSecret) {
-            Log::warning('VTStack Webhook: Secret mismatch', ['received' => $receivedSecret]);
-            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+        $signature = $request->header('X-VTStack-Signature');
+        $isVerified = false;
+
+        if ($webhookSecret) {
+            // Check Secret Key Header first (Many gateways use this as a direct check)
+            if ($receivedSecret === $webhookSecret) {
+                $isVerified = true;
+                Log::info('VTStack Webhook: Verified via Secret Key Header');
+            }
+
+            // If not verified yet, try HMAC-SHA256
+            if (!$isVerified && $signature) {
+                $computed256 = hash_hmac('sha256', $request->getContent(), $webhookSecret);
+                if (hash_equals($signature, $computed256)) {
+                    $isVerified = true;
+                    Log::info('VTStack Webhook: Verified via HMAC-SHA256');
+                }
+            }
+
+            // If still not verified, try HMAC-SHA512
+            if (!$isVerified && $signature) {
+                $computed512 = hash_hmac('sha512', $request->getContent(), $webhookSecret);
+                if (hash_equals($signature, $computed512)) {
+                    $isVerified = true;
+                    Log::info('VTStack Webhook: Verified via HMAC-SHA512');
+                }
+            }
         }
 
-        // 2. Verify Signature (Primary Integrity Check)
-        $signature = $request->header('X-VTStack-Signature');
-        if ($webhookSecret && $signature) {
-            $computedSignature = hash_hmac('sha256', $request->getContent(), $webhookSecret);
-            
-            Log::info('VTStack Webhook: Signature check', [
-                'received' => $signature,
-                'computed' => $computedSignature
+        if (!$isVerified) {
+            Log::warning('VTStack Webhook: Verification failed', [
+                'has_secret' => !!$webhookSecret,
+                'has_signature' => !!$signature,
+                'received_secret' => $receivedSecret ? 'present' : 'missing'
             ]);
-
-            if (!hash_equals($signature, $computedSignature)) {
-                Log::warning('VTStack Webhook: Signature mismatch');
-                return response()->json(['success' => false, 'message' => 'Invalid signature'], 401);
-            }
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
         }
 
         // 3. Process Event
