@@ -40,7 +40,8 @@ Route::get('clear', function () {
 
 Route::middleware('throttle:limit-check')->group(function () {
     Route::prefix('my')->group(function () {
-        Route::get('/', [AdminController::class, 'login'])->name('admin.login');
+        Route::get('/', [AdminController::class, 'login'])->name('admin.login-base');
+        Route::get('login', [AdminController::class, 'login'])->name('admin.login');
         Route::post('login', [AdminController::class, 'login_submit'])->name('admin.login-submit');
     });
 
